@@ -727,7 +727,7 @@ function renderProg(){
   BLOCKS.forEach(b=>{
     h+=`<div class="card"><div class="ct">${b.name} block <span class="badge ${b.badge}">${b.name}</span></div>
     <div class="cs">Weeks ${b.weeks[0]}–${b.weeks[b.weeks.length-1]} · ${b.sets} sets · ${b.reps} reps · RPE ${b.rpe}</div>`;
-    for(let d=1;d<=5;d++){const s=SESSIONS[d];h+=`<div class="pd"><div class="pdh"><span class="pdn">Day ${d} — ${s.name}</span><span class="pdf">${s.focus}</span></div>${s.exercises.map(ex=>`<div class="pex">${ex.name} — ${ex.sets}×${ex.reps}${ex.weight?' @ '+ex.weight+'kg':''}</div>`).join('')}</div>`;}
+    for(let d=1;d<=5;d++){const s=SESSIONS[d];h+=`<div class="pd"><div class="pdh"><span class="pdn">Day ${d} — ${s.name}</span><span class="pdf">${s.focus}</span></div>${s.exercises.map(ex=>`<div class="pex">${ex.name} — ${ex.sets}×${ex.reps}${ex.weight?' @ '+ex.weight+'kg':''}</div>${ex.notes?`<div style="font-size:11px;color:var(--mu2);padding:1px 0 4px 0;font-style:italic">${ex.notes}</div>`:''}`).join('')}
     h+='</div>';
   });
   document.getElementById('prog-content').innerHTML=h;
