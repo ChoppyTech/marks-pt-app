@@ -839,7 +839,36 @@ function exportLog(){
 let tT=null;
 function showToast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+(type||'');if(tT)clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),2500);}
 
-loadState();renderWeekGrid();renderDayGrid();updSB();testConn();
+async function loadFromSupabase(){
+  try{
+    setSS("sy","Loading...");
+    const rows=await sbF();
+    if(!rows||!rows.length){setSS("ok","Connected");return;}
+    const sessMap={};
+    rows.forEach(row=>{
+      const key=`${row.date}_w${row.week}_d${row.day}`;
+      if(!sessMap[key]){
+        sessMap[key]={date:row.date,week:row.week,block:row.block,day:row.day,sessionName:row.session_name,sessionNotes:row.session_notes||"",exercises:[]};
+      }
+      sessMap[key].exercises.push({name:row.exercise,sets:row.sets,reps:row.reps,weight:row.weight,rpe:row.rpe,notes:row.notes||""});
+    });
+    const sessions=Object.values(sessMap).sort((a,b)=>{
+      const da=a.date.split("/").reverse().join("-");
+      const db2=b.date.split("/").reverse().join("-");
+      return new Date(db2)-new Date(da);
+    });
+    state.logs=sessions;
+    sessions.forEach(sess=>{
+      sess.exercises.forEach(ex=>{
+        if(ex.weight&&state.weights[ex.name])state.weights[ex.name].current=parseFloat(ex.weight);
+      });
+    });
+    saveState();renderWeekGrid();
+    setSS("ok","Connected");
+    showToast("Data loaded 2713","success");
+  }catch(e){setSS("er","Offline");}
+}
+loadState();renderWeekGrid();renderDayGrid();updSB();testConn();loadFromSupabase();
 </script>
 </body>
 </html>
