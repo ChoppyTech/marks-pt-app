@@ -479,7 +479,7 @@ body{background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;font-
 
 <script>
 var SU='https://dofctputspabsyxbtmyg.supabase.co';
-var SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRvZmN0cHV0c3BhYnN5eGJ0bXlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjIxODUsImV4cCI6MjA5MTIzODE4NX0.o5ZDxragjYnicGnl7kZu7nrEb3IJ-sKd2vDwb-_kIvM';
+var SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRvZmN0cHV0c3BhYnN5eGJ0bXlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjIxODUsImV4cCI6MjA5MTIzODE4NX0.o5ZDxragjYnicGnl7kZu7nrEn3IJ-sKd2vDwb-_kIvM';
 var SH={'Content-Type':'application/json','apikey':SK,'Authorization':'Bearer '+SK};
 
 function sbI(rows){return fetch(SU+'/rest/v1/sessions',{method:'POST',headers:Object.assign({},SH,{'Prefer':'return=minimal'}),body:JSON.stringify(rows)}).then(function(r){if(!r.ok)throw new Error(r.status);});}
