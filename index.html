@@ -148,12 +148,6 @@ body{background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;font-
 .dv{height:1px;background:var(--bd);margin:16px 0}
 .macrobar{background:var(--s3);border-radius:4px;height:8px;overflow:hidden;margin-top:6px}
 .macrobar-fill{height:100%;border-radius:4px;transition:width .6s}
-.toast{position:fixed;bottom:72px;left:50%;transform:translateX(-50%) translateY(30px);background:var(--s2);border:1px solid var(--bd);color:var(--tx);padding:10px 18px;border-radius:10px;font-size:13px;z-index:200;transition:all .25s;opacity:0;white-space:nowrap;max-width:90vw;pointer-events:none}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.toast.success{border-color:var(--ok);color:var(--ok)}.toast.error{border-color:var(--err);color:var(--err)}
-.empty{text-align:center;padding:40px 20px;color:var(--mu)}
-.empty .ic{font-size:36px;margin-bottom:10px}
-.empty p{font-size:13px;line-height:1.6}
 .n-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .n-box{background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:12px}
 .n-box-wide{grid-column:1/-1}
@@ -165,23 +159,99 @@ body{background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;font-
 .ni-field input{width:100%;background:var(--s3);border:1px solid var(--bd);border-radius:6px;color:var(--tx);font-family:'DM Sans',sans-serif;font-size:14px;padding:8px 10px}
 .ni-field input:focus{outline:none;border-color:var(--ac)}
 .ni-field input::placeholder{color:var(--mu2)}
+.cl-btn{flex:1;padding:8px 4px;background:var(--s2);border:1px solid var(--bd);border-radius:8px;color:var(--mu);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;transition:all .15s;text-align:center}
+.cl-btn.sel{background:#1a1e00;border-color:var(--ac);color:var(--ac)}
+.al-card{background:var(--s2);border:1px solid #ffd147;border-radius:10px;padding:12px;margin-bottom:8px}
+.al-title{font-family:'Bebas Neue',sans-serif;font-size:16px;color:#ffd147;letter-spacing:.5px;margin-bottom:4px}
+.al-body{font-size:12px;color:var(--mu);line-height:1.5}
+.al-card.green{border-color:var(--ok)}.al-card.green .al-title{color:var(--ok)}
+.streak-dot{flex:1;border-radius:8px;padding:8px 4px;text-align:center}
+.toast{position:fixed;bottom:72px;left:50%;transform:translateX(-50%) translateY(30px);background:var(--s2);border:1px solid var(--bd);color:var(--tx);padding:10px 18px;border-radius:10px;font-size:13px;z-index:200;transition:all .25s;opacity:0;white-space:nowrap;max-width:90vw;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.success{border-color:var(--ok);color:var(--ok)}.toast.error{border-color:var(--err);color:var(--err)}
+.empty{text-align:center;padding:40px 20px;color:var(--mu)}
+.empty .ic{font-size:36px;margin-bottom:10px}
+.empty p{font-size:13px;line-height:1.6}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:300;align-items:flex-end;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--s1);border:1px solid var(--bd);border-radius:16px 16px 0 0;padding:24px 20px;width:100%;max-width:480px}
 </style>
 </head>
 <body>
+
 <div class="hdr">
   <div><h1>Mark's PT</h1><div class="sub">12-Week Programme</div></div>
   <div class="ss"><div class="sd" id="sd"></div><span id="sl">—</span></div>
 </div>
 
+<!-- PRE-SESSION CHECKLIST MODAL -->
+<div class="modal-overlay" id="checklist-modal">
+  <div class="modal-box">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px;margin-bottom:4px">Pre-session check</div>
+    <div style="font-size:12px;color:var(--mu);margin-bottom:20px">10 seconds. How are you walking in today?</div>
+    <div style="margin-bottom:16px">
+      <div style="font-size:11px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Sleep quality</div>
+      <div style="display:flex;gap:6px" id="cl-sleep-btns">
+        <button class="cl-btn" onclick="setCheck('sleep',1,this)">Poor</button>
+        <button class="cl-btn" onclick="setCheck('sleep',2,this)">OK</button>
+        <button class="cl-btn" onclick="setCheck('sleep',3,this)">Good</button>
+        <button class="cl-btn" onclick="setCheck('sleep',4,this)">Great</button>
+      </div>
+    </div>
+    <div style="margin-bottom:16px">
+      <div style="font-size:11px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Energy level</div>
+      <div style="display:flex;gap:6px" id="cl-energy-btns">
+        <button class="cl-btn" onclick="setCheck('energy',1,this)">Low</button>
+        <button class="cl-btn" onclick="setCheck('energy',2,this)">Medium</button>
+        <button class="cl-btn" onclick="setCheck('energy',3,this)">High</button>
+        <button class="cl-btn" onclick="setCheck('energy',4,this)">Fired up</button>
+      </div>
+    </div>
+    <div style="margin-bottom:20px">
+      <div style="font-size:11px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Eaten in last 2 hours?</div>
+      <div style="display:flex;gap:6px" id="cl-food-btns">
+        <button class="cl-btn" onclick="setCheck('food',1,this)">No</button>
+        <button class="cl-btn" onclick="setCheck('food',2,this)">Light snack</button>
+        <button class="cl-btn" onclick="setCheck('food',3,this)">Full meal</button>
+      </div>
+    </div>
+    <button onclick="startFromChecklist()" style="width:100%;padding:14px;background:var(--ac);color:#0f0f0f;border:none;border-radius:10px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;cursor:pointer;margin-bottom:8px">Start session</button>
+    <button onclick="skipChecklist()" style="width:100%;padding:10px;background:transparent;border:none;color:var(--mu);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer">Skip</button>
+  </div>
+</div>
+
 <!-- TRAIN -->
 <div id="view-train" class="view active">
   <div id="sel-panel">
+    <!-- STREAK -->
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div class="ct" style="margin-bottom:0">This week</div>
+        <div style="font-size:11px;color:var(--mu)" id="streak-label">0 of 5 days</div>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:12px" id="streak-dots"></div>
+      <div style="display:flex;justify-content:space-between">
+        <div>
+          <div style="font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Streak</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--ac)" id="streak-count">0 <span style="font-size:13px;color:var(--mu)">sessions</span></div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Total</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--ac)" id="total-count">0 <span style="font-size:13px;color:var(--mu)">sessions</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OVERLOAD ALERTS -->
+    <div id="overload-alerts"></div>
+
+    <!-- SESSION SELECTOR -->
     <div class="card">
       <div class="ct">Select week</div>
       <div class="wg" id="weekGrid"></div>
       <div class="ct" style="margin-bottom:10px">Select day</div>
       <div class="dg" id="dayGrid"></div>
-      <button class="stb" id="startBtn" onclick="openSess()">Start Session</button>
+      <button class="stb" id="startBtn" onclick="showChecklist()">Start Session</button>
     </div>
   </div>
   <div id="sess-panel" style="display:none"></div>
@@ -192,7 +262,6 @@ body{background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;font-
 
 <!-- NUTRITION -->
 <div id="view-nutrition" class="view">
-  <!-- RECOVERY SCORE -->
   <div class="card">
     <div class="ct">Recovery score</div>
     <div class="cs">Calculated from Garmin data</div>
@@ -203,36 +272,22 @@ body{background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;font-
           <circle cx="45" cy="45" r="38" fill="none" id="rec-arc" stroke="#47ff8a" stroke-width="8" stroke-linecap="round" stroke-dasharray="239" stroke-dashoffset="239" transform="rotate(-90 45 45)" style="transition:stroke-dashoffset 1s,stroke 0.5s"/>
         </svg>
         <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1" id="rec-num">—</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1" id="rec-num">--</div>
           <div style="font-size:9px;color:var(--mu);text-transform:uppercase">/100</div>
         </div>
       </div>
       <div style="flex:1">
         <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;margin-bottom:6px" id="rec-label">Update Garmin data</div>
-        <div style="font-size:12px;color:var(--mu);line-height:1.5" id="rec-advice">Go to the Health tab and update your Garmin metrics to see your recovery score.</div>
+        <div style="font-size:12px;color:var(--mu);line-height:1.5" id="rec-advice">Go to Health tab and update your Garmin metrics to see your recovery score.</div>
       </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px">
-      <div style="background:var(--s2);border-radius:8px;padding:8px;text-align:center">
-        <div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:3px">Sleep</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--ac)" id="rc-sleep">—</div>
-      </div>
-      <div style="background:var(--s2);border-radius:8px;padding:8px;text-align:center">
-        <div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:3px">HRV</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--ac)" id="rc-hrv">—</div>
-      </div>
-      <div style="background:var(--s2);border-radius:8px;padding:8px;text-align:center">
-        <div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:3px">Stress</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--ac)" id="rc-stress">—</div>
-      </div>
-      <div style="background:var(--s2);border-radius:8px;padding:8px;text-align:center">
-        <div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:3px">RHR</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--ac)" id="rc-rhr">—</div>
-      </div>
+      <div style="background:var(--s2);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:3px">Sleep</div><div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--ac)" id="rc-sleep">--</div></div>
+      <div style="background:var(--s2);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:3px">HRV</div><div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--ac)" id="rc-hrv">--</div></div>
+      <div style="background:var(--s2);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:3px">Stress</div><div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--ac)" id="rc-stress">--</div></div>
+      <div style="background:var(--s2);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:3px">RHR</div><div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--ac)" id="rc-rhr">--</div></div>
     </div>
   </div>
-
-  <!-- DAILY TARGETS -->
   <div class="card">
     <div class="ct">Daily targets</div>
     <div class="cs">2,100 kcal · 194g protein · 190g carbs · 75g fat</div>
@@ -240,36 +295,18 @@ body{background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;font-
       <div class="n-box n-box-wide">
         <div class="n-lbl">Calories</div>
         <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:6px">
-          <div class="n-val" id="n-cal" style="color:var(--ac)">—</div>
+          <div class="n-val" id="n-cal" style="color:var(--ac)">--</div>
           <div style="font-size:13px;color:var(--mu)">/ 2100 kcal</div>
         </div>
         <div class="macrobar"><div class="macrobar-fill" id="n-cal-bar" style="background:var(--ac);width:0%"></div></div>
-        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--mu);margin-top:4px">
-          <span id="n-cal-status">Not logged today</span>
-          <span id="n-cal-rem">2100 remaining</span>
-        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--mu);margin-top:4px"><span id="n-cal-status">Not logged today</span><span id="n-cal-rem">2100 remaining</span></div>
       </div>
-      <div class="n-box">
-        <div class="n-lbl">Protein</div>
-        <div class="n-val" id="n-pro" style="color:var(--ok)">—</div>
-        <div class="n-target">/ 194g</div>
-        <div class="macrobar"><div class="macrobar-fill" id="n-pro-bar" style="background:var(--ok);width:0%"></div></div>
-      </div>
-      <div class="n-box">
-        <div class="n-lbl">Carbs</div>
-        <div class="n-val" id="n-carb" style="color:var(--inf)">—</div>
-        <div class="n-target">/ 190g</div>
-        <div class="macrobar"><div class="macrobar-fill" id="n-carb-bar" style="background:var(--inf);width:0%"></div></div>
-      </div>
-      <div class="n-box">
-        <div class="n-lbl">Fat</div>
-        <div class="n-val" id="n-fat" style="color:var(--ac2)">—</div>
-        <div class="n-target">/ 75g</div>
-        <div class="macrobar"><div class="macrobar-fill" id="n-fat-bar" style="background:var(--ac2);width:0%"></div></div>
-      </div>
+      <div class="n-box"><div class="n-lbl">Protein</div><div class="n-val" id="n-pro" style="color:var(--ok)">--</div><div class="n-target">/ 194g</div><div class="macrobar"><div class="macrobar-fill" id="n-pro-bar" style="background:var(--ok);width:0%"></div></div></div>
+      <div class="n-box"><div class="n-lbl">Carbs</div><div class="n-val" id="n-carb" style="color:var(--inf)">--</div><div class="n-target">/ 190g</div><div class="macrobar"><div class="macrobar-fill" id="n-carb-bar" style="background:var(--inf);width:0%"></div></div></div>
+      <div class="n-box"><div class="n-lbl">Fat</div><div class="n-val" id="n-fat" style="color:var(--ac2)">--</div><div class="n-target">/ 75g</div><div class="macrobar"><div class="macrobar-fill" id="n-fat-bar" style="background:var(--ac2);width:0%"></div></div></div>
     </div>
     <div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:12px">
-      <div style="font-size:12px;font-weight:600;margin-bottom:10px">Log today's intake</div>
+      <div style="font-size:12px;font-weight:600;margin-bottom:10px">Log today</div>
       <div class="ni-row">
         <div class="ni-field"><label>Calories (kcal)</label><input type="number" id="td-cal" placeholder="e.g. 1800"/></div>
         <div class="ni-field"><label>Protein (g)</label><input type="number" id="td-pro" placeholder="e.g. 150"/></div>
@@ -279,37 +316,21 @@ body{background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;font-
       <button class="upd-btn" onclick="logNutrition()">Log nutrition</button>
     </div>
   </div>
-
-  <!-- 7-DAY AVERAGES -->
   <div class="card">
     <div class="ct">7-day averages</div>
     <div class="cs">Rolling weekly nutrition</div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:12px">
-      <div style="text-align:center">
-        <div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:4px">Calories</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--ac)" id="avg-cal">—</div>
-      </div>
-      <div style="text-align:center">
-        <div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:4px">Protein</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--ok)" id="avg-pro">—</div>
-      </div>
-      <div style="text-align:center">
-        <div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:4px">Carbs</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--inf)" id="avg-carb">—</div>
-      </div>
-      <div style="text-align:center">
-        <div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:4px">Fat</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--ac2)" id="avg-fat">—</div>
-      </div>
+      <div style="text-align:center"><div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:4px">Calories</div><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--ac)" id="avg-cal">--</div></div>
+      <div style="text-align:center"><div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:4px">Protein</div><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--ok)" id="avg-pro">--</div></div>
+      <div style="text-align:center"><div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:4px">Carbs</div><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--inf)" id="avg-carb">--</div></div>
+      <div style="text-align:center"><div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:4px">Fat</div><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--ac2)" id="avg-fat">--</div></div>
     </div>
-    <div style="font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Avg protein vs 194g target</div>
+    <div style="font-size:10px;color:var(--mu);text-transform:uppercase;margin-bottom:5px">Avg protein vs 194g target</div>
     <div class="macrobar"><div class="macrobar-fill" id="avg-pro-bar" style="background:var(--ok);width:0%"></div></div>
   </div>
-
-  <!-- WEIGHT TREND -->
   <div class="card">
     <div class="ct">Weight trend</div>
-    <div class="cs">88kg → 75kg goal</div>
+    <div class="cs">88kg to 75kg goal</div>
     <div id="wt-chart" style="margin-bottom:14px;min-height:40px"></div>
     <div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:12px">
       <div style="font-size:12px;font-weight:600;margin-bottom:8px">Log today's weight</div>
@@ -329,80 +350,80 @@ body{background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;font-
     <button class="htab" onclick="showHTab('rhino',this)">Rhino</button>
   </div>
   <div class="htab-content active" id="htab-garmin">
-    <div class="week-badge" id="garmin-week-label">Week of 2–8 Apr</div>
+    <div class="week-badge" id="garmin-week-label">Week of 2-8 Apr</div>
     <div class="hm-grid">
       <div class="hm"><div class="hm-label">Sleep score</div><div class="hm-val" id="g-sleep" style="color:var(--ac)">62</div><div class="hm-unit">/100</div><span class="hm-status warn" id="g-sleep-s">Moderate</span></div>
-      <div class="hm"><div class="hm-label">Body battery Δ</div><div class="hm-val" id="g-bb" style="color:var(--ok)">+37</div><div class="hm-unit">avg change</div><span class="hm-status good" id="g-bb-s">Recovering</span></div>
-      <div class="hm"><div class="hm-label">Resting HR</div><div class="hm-val" id="g-rhr" style="color:var(--inf)">57</div><div class="hm-unit">bpm avg</div><span class="hm-status good">Good</span></div>
-      <div class="hm"><div class="hm-label">Overnight HR</div><div class="hm-val" id="g-ohr" style="color:var(--inf)">67</div><div class="hm-unit">bpm avg</div><span class="hm-status info">Tracked</span></div>
+      <div class="hm"><div class="hm-label">Body battery</div><div class="hm-val" id="g-bb" style="color:var(--ok)">+37</div><div class="hm-unit">avg change</div><span class="hm-status good" id="g-bb-s">Recovering</span></div>
+      <div class="hm"><div class="hm-label">Resting HR</div><div class="hm-val" id="g-rhr" style="color:var(--inf)">57</div><div class="hm-unit">bpm</div><span class="hm-status good">Good</span></div>
+      <div class="hm"><div class="hm-label">Overnight HR</div><div class="hm-val" id="g-ohr" style="color:var(--inf)">67</div><div class="hm-unit">bpm</div><span class="hm-status info">Tracked</span></div>
       <div class="hm"><div class="hm-label">HRV (7d avg)</div><div class="hm-val" id="g-hrv" style="color:#ffd147">64</div><div class="hm-unit">ms</div><span class="hm-status warn" id="g-hrv-s">Unbalanced</span></div>
-      <div class="hm"><div class="hm-label">Stress (avg)</div><div class="hm-val" id="g-str" style="color:#ffd147">43</div><div class="hm-unit">/100</div><span class="hm-status warn" id="g-str-s">Moderate</span></div>
-      <div class="hm"><div class="hm-label">VO₂ Max</div><div class="hm-val" id="g-vo2" style="color:var(--ac2)">43</div><div class="hm-unit">Fair</div><span class="hm-status warn">Top 50% age/gender</span></div>
-      <div class="hm"><div class="hm-label">Training load</div><div class="hm-val" id="g-load" style="color:var(--mu)">42</div><div class="hm-unit">load score</div><span class="hm-status warn" id="g-load-s">Low</span></div>
-      <div class="hm hm-wide"><div class="hm-label">Respiration</div><div style="display:flex;gap:20px;margin-top:4px"><div><div style="font-size:10px;color:var(--mu);margin-bottom:2px">Sleep avg</div><div class="hm-val" id="g-resp-s" style="font-size:22px;color:var(--inf)">18</div><div class="hm-unit">brpm</div></div><div><div style="font-size:10px;color:var(--mu);margin-bottom:2px">Awake avg</div><div class="hm-val" id="g-resp-a" style="font-size:22px;color:var(--inf)">16</div><div class="hm-unit">brpm</div></div></div></div>
+      <div class="hm"><div class="hm-label">Stress avg</div><div class="hm-val" id="g-str" style="color:#ffd147">43</div><div class="hm-unit">/100</div><span class="hm-status warn" id="g-str-s">Moderate</span></div>
+      <div class="hm"><div class="hm-label">VO2 Max</div><div class="hm-val" id="g-vo2" style="color:var(--ac2)">43</div><div class="hm-unit">Fair</div><span class="hm-status warn">Top 50%</span></div>
+      <div class="hm"><div class="hm-label">Training load</div><div class="hm-val" id="g-load" style="color:var(--mu)">42</div><div class="hm-unit">score</div><span class="hm-status warn" id="g-load-s">Low</span></div>
+      <div class="hm hm-wide"><div class="hm-label">Respiration</div><div style="display:flex;gap:20px;margin-top:4px"><div><div style="font-size:10px;color:var(--mu);margin-bottom:2px">Sleep</div><div class="hm-val" id="g-resp-s" style="font-size:22px;color:var(--inf)">18</div><div class="hm-unit">brpm</div></div><div><div style="font-size:10px;color:var(--mu);margin-bottom:2px">Awake</div><div class="hm-val" id="g-resp-a" style="font-size:22px;color:var(--inf)">16</div><div class="hm-unit">brpm</div></div></div></div>
       <div class="hm hm-wide"><div class="hm-label">Training status</div><div class="hm-val" id="g-tstatus" style="font-size:20px;color:var(--ok)">Recovery</div><div class="hm-sub" id="g-tsub">Load Focus: High Aerobic Shortage</div></div>
     </div>
     <div class="update-section">
       <div class="update-title">Update Garmin data</div>
       <div class="update-grid">
         <div class="uf"><label>Sleep score</label><input type="number" id="u-sleep" placeholder="62"/></div>
-        <div class="uf"><label>Body battery Δ</label><input type="number" id="u-bb" placeholder="37"/></div>
-        <div class="uf"><label>Resting HR (bpm)</label><input type="number" id="u-rhr" placeholder="57"/></div>
-        <div class="uf"><label>Overnight HR (bpm)</label><input type="number" id="u-ohr" placeholder="67"/></div>
+        <div class="uf"><label>Body battery</label><input type="number" id="u-bb" placeholder="37"/></div>
+        <div class="uf"><label>Resting HR</label><input type="number" id="u-rhr" placeholder="57"/></div>
+        <div class="uf"><label>Overnight HR</label><input type="number" id="u-ohr" placeholder="67"/></div>
         <div class="uf"><label>HRV (ms)</label><input type="number" id="u-hrv" placeholder="64"/></div>
         <div class="uf"><label>Stress avg</label><input type="number" id="u-str" placeholder="43"/></div>
-        <div class="uf"><label>VO₂ Max</label><input type="number" id="u-vo2" placeholder="43"/></div>
+        <div class="uf"><label>VO2 Max</label><input type="number" id="u-vo2" placeholder="43"/></div>
         <div class="uf"><label>Training load</label><input type="number" id="u-load" placeholder="42"/></div>
-        <div class="uf"><label>Resp sleep (brpm)</label><input type="number" id="u-resps" placeholder="18"/></div>
-        <div class="uf"><label>Resp awake (brpm)</label><input type="number" id="u-respa" placeholder="16"/></div>
+        <div class="uf"><label>Resp sleep</label><input type="number" id="u-resps" placeholder="18"/></div>
+        <div class="uf"><label>Resp awake</label><input type="number" id="u-respa" placeholder="16"/></div>
       </div>
       <div class="uf"><label>Training status</label><input type="text" id="u-tstatus" placeholder="Recovery"/></div>
-      <div class="uf"><label>Status detail</label><input type="text" id="u-tsub" placeholder="Load Focus: High Aerobic Shortage"/></div>
+      <div class="uf"><label>Status detail</label><input type="text" id="u-tsub" placeholder="Load Focus..."/></div>
       <button class="upd-btn" onclick="updateGarmin()">Update Garmin data</button>
     </div>
   </div>
   <div class="htab-content" id="htab-mfp">
-    <div class="week-badge">MyFitnessPal — update weekly from screenshots</div>
+    <div class="week-badge">MyFitnessPal - update weekly</div>
     <div class="hm-grid">
-      <div class="hm"><div class="hm-label">Calories (avg)</div><div class="hm-val" id="m-cal" style="color:var(--ac)">—</div><div class="hm-unit">kcal/day</div><span class="hm-status info" id="m-cal-s">Not set</span></div>
-      <div class="hm"><div class="hm-label">Calorie target</div><div class="hm-val" id="m-target" style="color:var(--mu)">—</div><div class="hm-unit">kcal/day</div></div>
-      <div class="hm"><div class="hm-label">Protein (avg)</div><div class="hm-val" id="m-pro" style="color:var(--ok)">—</div><div class="hm-unit">g/day</div><div class="hm-sub">Target: ~194g</div></div>
-      <div class="hm"><div class="hm-label">Carbs (avg)</div><div class="hm-val" id="m-carb" style="color:var(--inf)">—</div><div class="hm-unit">g/day</div></div>
-      <div class="hm"><div class="hm-label">Fat (avg)</div><div class="hm-val" id="m-fat" style="color:var(--ac2)">—</div><div class="hm-unit">g/day</div></div>
-      <div class="hm"><div class="hm-label">Water (avg)</div><div class="hm-val" id="m-water" style="color:var(--inf)">—</div><div class="hm-unit">ml/day</div></div>
+      <div class="hm"><div class="hm-label">Calories (avg)</div><div class="hm-val" id="m-cal" style="color:var(--ac)">--</div><div class="hm-unit">kcal/day</div><span class="hm-status info" id="m-cal-s">Not set</span></div>
+      <div class="hm"><div class="hm-label">Calorie target</div><div class="hm-val" id="m-target" style="color:var(--mu)">--</div><div class="hm-unit">kcal/day</div></div>
+      <div class="hm"><div class="hm-label">Protein (avg)</div><div class="hm-val" id="m-pro" style="color:var(--ok)">--</div><div class="hm-unit">g/day</div><div class="hm-sub">Target: 194g</div></div>
+      <div class="hm"><div class="hm-label">Carbs (avg)</div><div class="hm-val" id="m-carb" style="color:var(--inf)">--</div><div class="hm-unit">g/day</div></div>
+      <div class="hm"><div class="hm-label">Fat (avg)</div><div class="hm-val" id="m-fat" style="color:var(--ac2)">--</div><div class="hm-unit">g/day</div></div>
+      <div class="hm"><div class="hm-label">Water (avg)</div><div class="hm-val" id="m-water" style="color:var(--inf)">--</div><div class="hm-unit">ml/day</div></div>
     </div>
     <div class="update-section">
-      <div class="update-title">Update MyFitnessPal data</div>
+      <div class="update-title">Update MFP data</div>
       <div class="update-grid">
-        <div class="uf"><label>Avg calories (kcal)</label><input type="number" id="u-cal" placeholder="e.g. 1800"/></div>
-        <div class="uf"><label>Calorie target</label><input type="number" id="u-target" placeholder="e.g. 1900"/></div>
+        <div class="uf"><label>Avg calories</label><input type="number" id="u-cal" placeholder="e.g. 1800"/></div>
+        <div class="uf"><label>Target calories</label><input type="number" id="u-target" placeholder="e.g. 1900"/></div>
         <div class="uf"><label>Protein (g)</label><input type="number" id="u-pro" placeholder="e.g. 150"/></div>
         <div class="uf"><label>Carbs (g)</label><input type="number" id="u-carb" placeholder="e.g. 200"/></div>
         <div class="uf"><label>Fat (g)</label><input type="number" id="u-fat" placeholder="e.g. 70"/></div>
         <div class="uf"><label>Water (ml)</label><input type="number" id="u-water" placeholder="e.g. 2000"/></div>
       </div>
-      <button class="upd-btn" onclick="updateMFP()">Update nutrition data</button>
+      <button class="upd-btn" onclick="updateMFP()">Update MFP data</button>
     </div>
   </div>
   <div class="htab-content" id="htab-rhino">
-    <div class="week-badge">Rhino Health — send screenshots to update</div>
+    <div class="week-badge">Rhino Health - send screenshots to update</div>
     <div class="hm-grid">
-      <div class="hm hm-wide"><div class="hm-label">No Rhino data yet</div><div style="font-size:13px;color:var(--mu);margin-top:6px;line-height:1.6">Send me a screenshot of your Rhino Health app and I'll build out your specific metrics here.</div></div>
-      <div class="hm" id="rh-m1" style="display:none"><div class="hm-label" id="rh-l1">Metric 1</div><div class="hm-val" id="rh-v1" style="color:var(--ac)">—</div></div>
-      <div class="hm" id="rh-m2" style="display:none"><div class="hm-label" id="rh-l2">Metric 2</div><div class="hm-val" id="rh-v2" style="color:var(--ac)">—</div></div>
-      <div class="hm" id="rh-m3" style="display:none"><div class="hm-label" id="rh-l3">Metric 3</div><div class="hm-val" id="rh-v3" style="color:var(--ac)">—</div></div>
-      <div class="hm" id="rh-m4" style="display:none"><div class="hm-label" id="rh-l4">Metric 4</div><div class="hm-val" id="rh-v4" style="color:var(--ac)">—</div></div>
+      <div class="hm hm-wide"><div class="hm-label">No Rhino data yet</div><div style="font-size:13px;color:var(--mu);margin-top:6px;line-height:1.6">Send me a screenshot of your Rhino Health app and I will build out your specific metrics here.</div></div>
+      <div class="hm" id="rh-m1" style="display:none"><div class="hm-label" id="rh-l1">Metric 1</div><div class="hm-val" id="rh-v1" style="color:var(--ac)">--</div></div>
+      <div class="hm" id="rh-m2" style="display:none"><div class="hm-label" id="rh-l2">Metric 2</div><div class="hm-val" id="rh-v2" style="color:var(--ac)">--</div></div>
+      <div class="hm" id="rh-m3" style="display:none"><div class="hm-label" id="rh-l3">Metric 3</div><div class="hm-val" id="rh-v3" style="color:var(--ac)">--</div></div>
+      <div class="hm" id="rh-m4" style="display:none"><div class="hm-label" id="rh-l4">Metric 4</div><div class="hm-val" id="rh-v4" style="color:var(--ac)">--</div></div>
     </div>
     <div class="update-section">
       <div class="update-title">Manual entry</div>
       <div class="update-grid">
-        <div class="uf"><label>Metric name</label><input type="text" id="rh-name1" placeholder="e.g. HbA1c"/></div>
+        <div class="uf"><label>Metric</label><input type="text" id="rh-name1" placeholder="e.g. HbA1c"/></div>
         <div class="uf"><label>Value</label><input type="text" id="rh-val1" placeholder="e.g. 5.4"/></div>
-        <div class="uf"><label>Metric name</label><input type="text" id="rh-name2" placeholder="e.g. Cholesterol"/></div>
+        <div class="uf"><label>Metric</label><input type="text" id="rh-name2" placeholder="e.g. Cholesterol"/></div>
         <div class="uf"><label>Value</label><input type="text" id="rh-val2" placeholder="e.g. 4.8"/></div>
-        <div class="uf"><label>Metric name</label><input type="text" id="rh-name3" placeholder=""/></div>
+        <div class="uf"><label>Metric</label><input type="text" id="rh-name3" placeholder=""/></div>
         <div class="uf"><label>Value</label><input type="text" id="rh-val3" placeholder=""/></div>
-        <div class="uf"><label>Metric name</label><input type="text" id="rh-name4" placeholder=""/></div>
+        <div class="uf"><label>Metric</label><input type="text" id="rh-name4" placeholder=""/></div>
         <div class="uf"><label>Value</label><input type="text" id="rh-val4" placeholder=""/></div>
       </div>
       <button class="upd-btn" onclick="updateRhino()">Save Rhino data</button>
@@ -419,10 +440,10 @@ body{background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;font-
   </div>
   <div class="card">
     <div class="ct">Body stats</div>
-    <div class="cs">Goal: 88kg → 75kg</div>
+    <div class="cs">Goal: 88kg to 75kg</div>
     <div class="sr">
       <div class="si"><div class="sl2">Start</div><div class="sv" style="color:var(--mu)">88<span class="su">kg</span></div></div>
-      <div class="si"><div class="sl2">Current</div><div class="sv" style="color:var(--ac)" id="statCur">—</div></div>
+      <div class="si"><div class="sl2">Current</div><div class="sv" style="color:var(--ac)" id="statCur">--</div></div>
       <div class="si"><div class="sl2">Target</div><div class="sv" style="color:var(--ok)">75<span class="su">kg</span></div></div>
     </div>
     <div style="margin-top:14px">
@@ -439,24 +460,11 @@ body{background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;font-
 
 <!-- SETUP -->
 <div id="view-setup" class="view">
-  <div class="ss2">
-    <h3>Database</h3>
-    <div class="cb" id="connBar"><div class="cd"></div><span id="connLabel">Checking...</span></div>
-    <p>Supabase connected. All sessions sync automatically.</p>
-  </div>
+  <div class="ss2"><h3>Database</h3><div class="cb" id="connBar"><div class="cd"></div><span id="connLabel">Checking...</span></div><p>Supabase connected. Sessions sync automatically.</p></div>
   <div class="dv"></div>
-  <div class="ss2">
-    <h3>Body weight</h3>
-    <p>Log your current weight to track progress toward 75kg.</p>
-    <div class="ig"><label>Current weight (kg)</label><input type="number" id="bwInput" placeholder="88" step="0.1"/></div>
-    <button class="ab" onclick="saveBW()">Update weight</button>
-  </div>
+  <div class="ss2"><h3>Body weight</h3><p>Log your current weight to track progress toward 75kg.</p><div class="ig"><label>Current weight (kg)</label><input type="number" id="bwInput" placeholder="88" step="0.1"/></div><button class="ab" onclick="saveBW()">Update weight</button></div>
   <div class="dv"></div>
-  <div class="ss2">
-    <h3>Export log</h3>
-    <p>Copy your full session log to paste into Claude for coaching analysis.</p>
-    <button class="ab sec" onclick="exportLog()">Copy log to clipboard</button>
-  </div>
+  <div class="ss2"><h3>Export log</h3><p>Copy your full session log to paste into Claude for coaching analysis.</p><button class="ab sec" onclick="exportLog()">Copy log to clipboard</button></div>
 </div>
 
 <nav class="nav">
@@ -470,38 +478,49 @@ body{background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;font-
 <div class="toast" id="toast"></div>
 
 <script>
-const SU='https://dofctputspabsyxbtmyg.supabase.co';
-const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRvZmN0cHV0c3BhYnN5eGJ0bXlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjIxODUsImV4cCI6MjA5MTIzODE4NX0.o5ZDxragjYnicGnl7kZu7nrEn3IJ-sKd2vDwb-_kIvM';
-const SH={'Content-Type':'application/json','apikey':SK,'Authorization':'Bearer '+SK};
-async function sbI(rows){const r=await fetch(SU+'/rest/v1/sessions',{method:'POST',headers:Object.assign({},SH,{'Prefer':'return=minimal'}),body:JSON.stringify(rows)});if(!r.ok)throw new Error(await r.text());}
-async function sbF(){const r=await fetch(SU+'/rest/v1/sessions?select=*&order=created_at.desc',{headers:SH});if(!r.ok)throw new Error(await r.text());return r.json();}
-async function testConn(){try{await sbF();setSS('ok','Connected');document.getElementById('connBar').classList.add('ok');document.getElementById('connLabel').textContent='✓ Supabase connected';}catch(e){setSS('er','Offline');document.getElementById('connLabel').textContent='Connection failed';}}
+var SU='https://dofctputspabsyxbtmyg.supabase.co';
+var SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRvZmN0cHV0c3BhYnN5eGJ0bXlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjIxODUsImV4cCI6MjA5MTIzODE4NX0.o5ZDxragjYnicGnl7kZu7nrEb3IJ-sKd2vDwb-_kIvM';
+var SH={'Content-Type':'application/json','apikey':SK,'Authorization':'Bearer '+SK};
+
+function sbI(rows){return fetch(SU+'/rest/v1/sessions',{method:'POST',headers:Object.assign({},SH,{'Prefer':'return=minimal'}),body:JSON.stringify(rows)}).then(function(r){if(!r.ok)throw new Error(r.status);});}
+function sbF(){return fetch(SU+'/rest/v1/sessions?select=*&order=created_at.desc',{headers:SH}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json();});}
+
+function testConn(){
+  sbF().then(function(){
+    setSS('ok','Connected');
+    document.getElementById('connBar').classList.add('ok');
+    document.getElementById('connLabel').textContent='Connected to Supabase';
+  }).catch(function(){
+    setSS('er','Offline');
+    document.getElementById('connLabel').textContent='Connection failed';
+  });
+}
 function setSS(s,l){document.getElementById('sd').className='sd '+s;document.getElementById('sl').textContent=l;}
 
-const BLOCKS=[
+var BLOCKS=[
   {weeks:[1,2,3,4],name:'Volume',sets:'3-4',reps:'10-15',rpe:'7-8',badge:'bv'},
   {weeks:[5,6,7,8],name:'Intensity',sets:'3-4',reps:'6-10',rpe:'8-9',badge:'bi'},
   {weeks:[9,10,11],name:'Strength',sets:'4-5',reps:'4-6',rpe:'8-9+',badge:'bs'},
   {weeks:[12],name:'Deload',sets:'2',reps:'10-12',rpe:'6',badge:'bd2'}
 ];
-function getBlock(w){return BLOCKS.find(function(b){return b.weeks.indexOf(w)>=0;})||BLOCKS[0];}
+function getBlock(w){for(var i=0;i<BLOCKS.length;i++){if(BLOCKS[i].weeks.indexOf(w)>=0)return BLOCKS[i];}return BLOCKS[0];}
 
 var SESSIONS={
-  1:{name:'Push',type:'push',focus:'Chest · Shoulders · Triceps',exercises:[
+  1:{name:'Push',type:'push',focus:'Chest / Shoulders / Triceps',exercises:[
     {name:'Barbell Bench Press',sets:4,reps:10,weight:18.1,bench:'Flat',rest:150,notes:'Main compound'},
     {name:'Incline Barbell Press',sets:3,reps:10,weight:18.1,bench:'Notch 2',rest:150,notes:'Upper chest'},
     {name:'Incline DB Fly',sets:3,reps:12,weight:10,bench:'Notch 2',rest:75,notes:'Slow stretch at bottom'},
     {name:'Seated DB OHP',sets:3,reps:12,weight:15,bench:'Notch 3 (backrest)',rest:150,notes:'Per hand'},
     {name:'Lateral Raise (DB)',sets:3,reps:15,weight:10,bench:'Standing',rest:75,notes:'2s up, 3s down'},
-    {name:'1-Arm Overhead Extension',sets:3,reps:12,weight:7.5,bench:'Standing',rest:75,notes:'Per arm - full stretch'},
+    {name:'1-Arm Overhead Extension',sets:3,reps:12,weight:7.5,bench:'Standing',rest:75,notes:'Per arm - full stretch at bottom'},
     {name:'Plank',sets:3,reps:'30s',weight:null,bench:'Floor',rest:60,notes:'Core finisher'}
   ]},
-  2:{name:'Cardio',type:'cardio',focus:'Gibala HIIT · ~10 min',exercises:[
-    {name:'Warm-up',sets:1,reps:'3 min',weight:null,bench:'---',rest:0,notes:'March on the spot, arm swings, light bodyweight squats. Get blood moving - nothing strenuous.'},
-    {name:'All-out sprint effort',sets:3,reps:'20s',weight:null,bench:'---',rest:120,notes:'Pick one: burpees, jumping jacks, or mountain climbers. Go absolutely flat out - RPE 9-10. You should not be able to hold a conversation. 2 min full rest between each effort. This is the whole workout - intensity is everything.'},
-    {name:'Cool-down',sets:1,reps:'2 min',weight:null,bench:'---',rest:0,notes:'Easy walking, slow your breathing, let heart rate come down fully before stopping.'}
+  2:{name:'Cardio',type:'cardio',focus:'Gibala HIIT / 10 min',exercises:[
+    {name:'Warm-up',sets:1,reps:'3 min',weight:null,bench:'',rest:0,notes:'March on the spot, arm swings, light bodyweight squats. Get blood moving - nothing strenuous.'},
+    {name:'All-out sprint effort',sets:3,reps:'20s',weight:null,bench:'',rest:120,notes:'Pick one: burpees, jumping jacks, or mountain climbers. Absolutely flat out - RPE 9-10. Cannot hold a conversation. 2 min full rest between efforts. Intensity is everything.'},
+    {name:'Cool-down',sets:1,reps:'2 min',weight:null,bench:'',rest:0,notes:'Easy walking, slow breathing, let heart rate come down fully.'}
   ]},
-  3:{name:'Pull',type:'pull',focus:'Back · Biceps',exercises:[
+  3:{name:'Pull',type:'pull',focus:'Back / Biceps',exercises:[
     {name:'Barbell Bent Over Row',sets:4,reps:10,weight:18.1,bench:'Standing',rest:150,notes:'Main compound'},
     {name:'Pendlay Row',sets:3,reps:8,weight:18.1,bench:'Standing',rest:150,notes:'Reset to floor each rep'},
     {name:'Chest Supported DB Row',sets:3,reps:12,weight:10,bench:'Notch 2 (chest down)',rest:90,notes:'Strict - no swing'},
@@ -510,16 +529,16 @@ var SESSIONS={
     {name:'Hammer Curl',sets:3,reps:12,weight:15,bench:'Standing',rest:75,notes:'Neutral grip'},
     {name:'Preacher Curl',sets:2,reps:15,weight:7.5,bench:'Bench setup',rest:60,notes:'Peak contraction finisher'}
   ]},
-  4:{name:'Cardio',type:'cardio',focus:'Walking pad · 30-45 min',exercises:[
-    {name:'Walking pad - steady state',sets:1,reps:'30-45 min',weight:null,bench:'---',rest:0,notes:'Low intensity. NEAT and active recovery.'}
+  4:{name:'Cardio',type:'cardio',focus:'Walking pad / 30-45 min',exercises:[
+    {name:'Walking pad - steady state',sets:1,reps:'30-45 min',weight:null,bench:'',rest:0,notes:'Low intensity. Conversational pace. NEAT and active recovery - do not skip this.'}
   ]},
-  5:{name:'Legs + Shoulders',type:'legs',focus:'Quads · Posterior · Delts',exercises:[
+  5:{name:'Legs + Shoulders',type:'legs',focus:'Quads / Posterior / Delts',exercises:[
     {name:'Barbell Back Squat',sets:4,reps:10,weight:18.1,bench:'Squat',rest:150,notes:'Primary compound'},
     {name:'Goblet Squat',sets:3,reps:15,weight:7.5,bench:'Standing',rest:90,notes:'Full depth'},
     {name:'Conventional Deadlift',sets:3,reps:8,weight:18.1,bench:'Floor',rest:150,notes:'Hip hinge - braced core'},
     {name:'Romanian Deadlift',sets:3,reps:10,weight:18.1,bench:'Floor',rest:120,notes:'Hamstring stretch - soft knee'},
     {name:'Barbell OHP',sets:3,reps:10,weight:18.1,bench:'Standing',rest:150,notes:'Vertical press'},
-    {name:'Rear Delt Fly (DB)',sets:3,reps:15,weight:10,bench:'Hinged',rest:75,notes:'Light, controlled'},
+    {name:'Rear Delt Fly (DB)',sets:3,reps:15,weight:10,bench:'Hinged',rest:75,notes:'Light, controlled, full ROM'},
     {name:'Standing Calf Raise',sets:3,reps:15,weight:null,bench:'Standing',rest:60,notes:'Full stretch at bottom'}
   ]}
 };
@@ -547,15 +566,18 @@ var state={
   nutrition:{logs:[],weightLog:[]}
 };
 
-function loadState(){try{var s=localStorage.getItem('markPT_v5');if(s){var p=JSON.parse(s);state=Object.assign({},state,p);}}catch(e){}}
-function saveState(){try{localStorage.setItem('markPT_v5',JSON.stringify(state));}catch(e){}}
+function loadState(){try{var s=localStorage.getItem('markPT_v6');if(s){var p=JSON.parse(s);state=Object.assign({},state,p);if(!state.nutrition)state.nutrition={logs:[],weightLog:[]};}}catch(e){}}
+function saveState(){try{localStorage.setItem('markPT_v6',JSON.stringify(state));}catch(e){}}
 function gw(n,f){return(state.weights[n]&&state.weights[n].current)||f||0;}
 
 function showView(name,btn){
-  document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
-  document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('active');});
+  var views=document.querySelectorAll('.view');
+  for(var i=0;i<views.length;i++)views[i].classList.remove('active');
+  var nbs=document.querySelectorAll('.nb');
+  for(var i=0;i<nbs.length;i++)nbs[i].classList.remove('active');
   document.getElementById('view-'+name).classList.add('active');
   if(btn)btn.classList.add('active');
+  if(name==='train'){renderStreak();checkOverload();}
   if(name==='progress'){renderProgress();renderHistory();}
   if(name==='programme')renderProg();
   if(name==='health')renderHealth();
@@ -564,8 +586,10 @@ function showView(name,btn){
 }
 
 function showHTab(name,btn){
-  document.querySelectorAll('.htab').forEach(function(b){b.classList.remove('active');});
-  document.querySelectorAll('.htab-content').forEach(function(c){c.classList.remove('active');});
+  var tabs=document.querySelectorAll('.htab');
+  for(var i=0;i<tabs.length;i++)tabs[i].classList.remove('active');
+  var contents=document.querySelectorAll('.htab-content');
+  for(var i=0;i<contents.length;i++)contents[i].classList.remove('active');
   btn.classList.add('active');
   document.getElementById('htab-'+name).classList.add('active');
 }
@@ -574,7 +598,8 @@ function renderWeekGrid(){
   var el=document.getElementById('weekGrid');el.innerHTML='';
   for(var w=1;w<=12;w++){
     var b=getBlock(w);
-    var logged=state.logs.some(function(l){return l.week===w;});
+    var logged=false;
+    for(var i=0;i<state.logs.length;i++){if(state.logs[i].week===w){logged=true;break;}}
     var btn=document.createElement('button');
     btn.className='wb'+(w===state.week?' active':'')+(logged?' logged':'');
     btn.innerHTML='<div class="wn">'+w+'</div><div class="wl">'+b.name.slice(0,3)+'</div>';
@@ -597,14 +622,137 @@ function renderDayGrid(){
 
 function updSB(){document.getElementById('startBtn').textContent='Start - Week '+state.week+' Day '+state.day;}
 
+// STREAK
+function renderStreak(){
+  var today=new Date();
+  var dayOfWeek=today.getDay();
+  var diff=dayOfWeek===0?-6:1-dayOfWeek;
+  var weekStart=new Date(today);
+  weekStart.setDate(today.getDate()+diff);
+  var dayNames=['Mon','Tue','Wed','Thu','Fri'];
+  var html='';
+  var weekCount=0;
+  for(var d=0;d<5;d++){
+    var dd=new Date(weekStart);
+    dd.setDate(weekStart.getDate()+d);
+    var ds=dd.toLocaleDateString('en-GB');
+    var isLogged=false;
+    for(var i=0;i<state.logs.length;i++){if(state.logs[i].date===ds){isLogged=true;break;}}
+    var isFuture=dd>today;
+    var isToday=ds===today.toLocaleDateString('en-GB');
+    if(isLogged)weekCount++;
+    var bg=isLogged?'var(--ok)':isFuture?'var(--s3)':'var(--s2)';
+    var border=isLogged?'#1a4a2a':isToday?'var(--ac)':'var(--bd)';
+    var tc=isLogged?'#0f0f0f':isToday?'var(--ac)':'var(--mu)';
+    var icon=isLogged?'&#10003;':isFuture?'':isToday?'&#9679;':'&#9675;';
+    html+='<div class="streak-dot" style="background:'+bg+';border:1px solid '+border+'">'
+      +'<div style="font-size:9px;color:'+tc+';text-transform:uppercase;margin-bottom:3px">'+dayNames[d]+'</div>'
+      +'<div style="font-size:14px;color:'+tc+'">'+icon+'</div></div>';
+  }
+  document.getElementById('streak-dots').innerHTML=html;
+  document.getElementById('streak-label').textContent=weekCount+' of 5 days';
+  var streak=0;
+  var cd=new Date(today);
+  for(var i=0;i<60;i++){
+    var ds=cd.toLocaleDateString('en-GB');
+    var has=false;
+    for(var j=0;j<state.logs.length;j++){if(state.logs[j].date===ds){has=true;break;}}
+    if(has){streak++;}else if(i>0){break;}
+    cd.setDate(cd.getDate()-1);
+  }
+  document.getElementById('streak-count').innerHTML=streak+' <span style="font-size:13px;color:var(--mu)">sessions</span>';
+  document.getElementById('total-count').innerHTML=state.logs.length+' <span style="font-size:13px;color:var(--mu)">sessions</span>';
+}
+
+// OVERLOAD ALERTS
+function checkOverload(){
+  var barbellWeights=[9,13.6,18.1,22.7,27.2,31.1,36.3];
+  var compoundLifts=['Barbell Bench Press','Incline Barbell Press','Barbell Bent Over Row','Pendlay Row','Barbell Curl','Barbell Back Squat','Conventional Deadlift','Romanian Deadlift','Barbell OHP'];
+  var alerts=[];
+  var liftNames=Object.keys(state.weights);
+  for(var k=0;k<liftNames.length;k++){
+    var liftName=liftNames[k];
+    var liftLogs=[];
+    for(var j=0;j<state.logs.length;j++){
+      var log=state.logs[j];
+      for(var e=0;e<log.exercises.length;e++){
+        if(log.exercises[e].name===liftName&&log.exercises[e].rpe&&log.exercises[e].rpe!=='--'){
+          liftLogs.push({date:log.date,rpe:parseFloat(log.exercises[e].rpe),weight:parseFloat(log.exercises[e].weight)||0});
+          break;
+        }
+      }
+      if(liftLogs.length>=2)break;
+    }
+    if(liftLogs.length>=2){
+      var rpe1=liftLogs[0].rpe;
+      var rpe2=liftLogs[1].rpe;
+      var currentWeight=state.weights[liftName].current;
+      var isCompound=compoundLifts.indexOf(liftName)>=0;
+      if(rpe1>0&&rpe2>0&&rpe1<=8&&rpe2<=8&&isCompound){
+        var nextWeight=null;
+        for(var w=0;w<barbellWeights.length;w++){
+          if(barbellWeights[w]>currentWeight){nextWeight=barbellWeights[w];break;}
+        }
+        if(nextWeight){
+          alerts.push({type:'progress',name:liftName,current:currentWeight,next:nextWeight,rpe1:rpe1,rpe2:rpe2});
+        }
+      }
+      if(rpe1>=9&&rpe2>=9&&Math.abs(liftLogs[0].weight-liftLogs[1].weight)<0.1){
+        alerts.push({type:'stall',name:liftName,weight:currentWeight,rpe1:rpe1,rpe2:rpe2});
+      }
+    }
+  }
+  var el=document.getElementById('overload-alerts');
+  if(!alerts.length){el.innerHTML='';return;}
+  var html='';
+  for(var a=0;a<alerts.length;a++){
+    var al=alerts[a];
+    if(al.type==='progress'){
+      html+='<div class="al-card green">'
+        +'<div class="al-title">Ready to progress - '+al.name+'</div>'
+        +'<div class="al-body">RPE '+al.rpe2+' and '+al.rpe1+' over 2 sessions at '+al.current+'kg. Move to <strong style="color:var(--ok)">'+al.next+'kg</strong> next session.</div>'
+        +'</div>';
+    } else {
+      html+='<div class="al-card">'
+        +'<div class="al-title">Check in - '+al.name+'</div>'
+        +'<div class="al-body">RPE '+al.rpe2+' and '+al.rpe1+' for 2 sessions at '+al.weight+'kg. Consider a form check before progressing.</div>'
+        +'</div>';
+    }
+  }
+  el.innerHTML=html;
+}
+
+// PRE-SESSION CHECKLIST
+var checkData={sleep:0,energy:0,food:0};
+function setCheck(field,val,btn){
+  checkData[field]=val;
+  var siblings=btn.parentElement.querySelectorAll('.cl-btn');
+  for(var i=0;i<siblings.length;i++)siblings[i].classList.remove('sel');
+  btn.classList.add('sel');
+}
+function showChecklist(){
+  checkData={sleep:0,energy:0,food:0};
+  var btns=document.querySelectorAll('.cl-btn');
+  for(var i=0;i<btns.length;i++)btns[i].classList.remove('sel');
+  document.getElementById('checklist-modal').classList.add('open');
+}
+function startFromChecklist(){
+  state.lastChecklist={date:new Date().toLocaleDateString('en-GB'),sleep:checkData.sleep,energy:checkData.energy,food:checkData.food};
+  document.getElementById('checklist-modal').classList.remove('open');
+  openSess();
+}
+function skipChecklist(){
+  document.getElementById('checklist-modal').classList.remove('open');
+  openSess();
+}
+
 function openSess(){
   var sess=SESSIONS[state.day];
   state.session={rpe:{},notes:{},weights:{},reps:{},sets:{},sessionNotes:'',done:{}};
   for(var i=0;i<sess.exercises.length;i++){
-    var ex=sess.exercises[i];
-    state.session.weights[i]=ex.weight!==null?gw(ex.name,ex.weight):null;
-    state.session.reps[i]=ex.reps;
-    state.session.sets[i]=ex.sets;
+    state.session.weights[i]=sess.exercises[i].weight!==null?gw(sess.exercises[i].name,sess.exercises[i].weight):null;
+    state.session.reps[i]=sess.exercises[i].reps;
+    state.session.sets[i]=sess.exercises[i].sets;
   }
   document.getElementById('sel-panel').style.display='none';
   var p=document.getElementById('sess-panel');
@@ -614,24 +762,18 @@ function openSess(){
 
 function buildSessHTML(sess,block){
   var exHTML='';
-  for(var i=0;i<sess.exercises.length;i++){
-    exHTML+=buildExHTML(sess.exercises[i],i);
-  }
+  for(var i=0;i<sess.exercises.length;i++)exHTML+=buildExHTML(sess.exercises[i],i);
   return '<div style="margin-bottom:16px">'
     +'<button class="bbtn" onclick="closeSess()">Back</button>'
     +'<div class="stl">Day '+state.day+' - '+sess.name+'</div>'
     +'<div class="smt">Week '+state.week+' <span class="badge '+block.badge+'">'+block.name+'</span> '+block.rpe+' RPE</div>'
     +'</div>'
-    +'<div class="rt" id="restTimer">'
-    +'<div class="rl">Rest timer</div>'
-    +'<div class="rtm" id="restDisp">2:00</div>'
-    +'<div class="rc">'
-    +'<button class="rcb" onclick="adjR(-30)">-30s</button>'
+    +'<div class="rt" id="restTimer"><div class="rl">Rest timer</div><div class="rtm" id="restDisp">2:00</div>'
+    +'<div class="rc"><button class="rcb" onclick="adjR(-30)">-30s</button>'
     +'<input class="rdi" id="restInp" type="number" value="120" min="10" max="600" onchange="setR(this.value)"/>'
     +'<span style="font-size:10px;color:var(--mu)">sec</span>'
     +'<button class="rcb" onclick="adjR(30)">+30s</button>'
-    +'<button class="rcb" onclick="stopR()" style="color:var(--err)">X</button>'
-    +'</div></div>'
+    +'<button class="rcb" onclick="stopR()" style="color:var(--err)">X</button></div></div>'
     +exHTML
     +'<div class="snw"><label>Session notes</label><textarea placeholder="Energy, sleep, overall feel..." oninput="state.session.sessionNotes=this.value"></textarea></div>'
     +'<button class="lb" id="logBtn" onclick="logSess()">Log Session</button>'
@@ -641,27 +783,23 @@ function buildSessHTML(sess,block){
 function buildExHTML(ex,i){
   var w=state.session.weights[i];
   var rpeHTML='';
-  var rpeVals=[5,6,7,8,9,10];
-  for(var r=0;r<rpeVals.length;r++){
-    rpeHTML+='<button class="rpb" id="rb-'+i+'-'+rpeVals[r]+'" onclick="selR('+i+','+rpeVals[r]+')">'+rpeVals[r]+'</button>';
-  }
+  var rv=[5,6,7,8,9,10];
+  for(var r=0;r<rv.length;r++)rpeHTML+='<button class="rpb" id="rb-'+i+'-'+rv[r]+'" onclick="selR('+i+','+rv[r]+')">'+rv[r]+'</button>';
   var restHTML='';
   if(ex.rest>0){
-    restHTML='<div class="rrow">'
-      +'<span class="rrl2">Rest: '+fmtS(ex.rest)+'</span>'
+    restHTML='<div class="rrow"><span class="rrl2">Rest: '+fmtS(ex.rest)+'</span>'
       +'<button class="srb" onclick="startR('+ex.rest+')">Start</button>'
-      +'<div class="rqb">'
-      +'<button class="rqbtn" onclick="startR(60)">1m</button>'
+      +'<div class="rqb"><button class="rqbtn" onclick="startR(60)">1m</button>'
       +'<button class="rqbtn" onclick="startR(90)">1:30</button>'
       +'<button class="rqbtn" onclick="startR(120)">2m</button>'
-      +'<button class="rqbtn" onclick="startR(180)">3m</button>'
-      +'</div></div>';
+      +'<button class="rqbtn" onclick="startR(180)">3m</button></div></div>';
   }
-  var tagHTML=ex.bench&&ex.bench!=='---'?'<span class="etag">'+ex.bench+'</span>':'';
+  var tagHTML=ex.bench?'<span class="etag">'+ex.bench+'</span>':'';
   var notesHTML=ex.notes?'<div style="font-size:11px;color:var(--mu);font-style:italic;margin-bottom:8px">'+ex.notes+'</div>':'';
+  var wOnchange=w!==null?'onchange="state.session.weights['+i+']=+this.value"':'';
   var wType=w!==null?'number':'text';
-  var wVal=w!==null?w:'---';
-  var wExtra=w!==null?'min="0" max="300" step="0.5" onchange="state.session.weights['+i+']=+this.value"':'readonly';
+  var wVal=w!==null?w:'--';
+  var wReadonly=w===null?'readonly':'min="0" max="300" step="0.5"';
   var wUnit=w!==null?'<div class="efu">kg</div>':'';
   return '<div class="er" id="er-'+i+'">'
     +'<div class="et"><div><div class="en">'+ex.name+'</div>'+tagHTML+'</div>'
@@ -669,9 +807,8 @@ function buildExHTML(ex,i){
     +'<div class="ef">'
     +'<div class="efl"><div class="efl-l">Sets</div><input class="efi" type="number" value="'+state.session.sets[i]+'" min="1" max="10" onchange="state.session.sets['+i+']=+this.value"/></div>'
     +'<div class="efl"><div class="efl-l">Reps</div><input class="efi" type="text" value="'+state.session.reps[i]+'" onchange="state.session.reps['+i+']=this.value"/></div>'
-    +'<div class="efl"><div class="efl-l">Weight</div><input class="efi" type="'+wType+'" value="'+wVal+'" '+wExtra+'/>'+wUnit+'</div>'
-    +'</div>'
-    +notesHTML+restHTML
+    +'<div class="efl"><div class="efl-l">Weight</div><input class="efi" type="'+wType+'" value="'+wVal+'" '+wReadonly+' '+wOnchange+'/>'+wUnit+'</div>'
+    +'</div>'+notesHTML+restHTML
     +'<div class="rr"><div class="rrl">RPE</div><div class="rs">'+rpeHTML+'</div></div>'
     +'<div><div style="font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Notes</div>'
     +'<input class="ni2" placeholder="How did it feel?" oninput="state.session.notes['+i+']=this.value"/></div>'
@@ -686,13 +823,10 @@ function togD(i){
 
 function selR(i,rpe){
   state.session.rpe[i]=rpe;
-  var vals=[5,6,7,8,9,10];
-  for(var r=0;r<vals.length;r++){
-    var btn=document.getElementById('rb-'+i+'-'+vals[r]);
-    if(btn)btn.className='rpb';
-  }
-  var btn=document.getElementById('rb-'+i+'-'+rpe);
-  if(btn)btn.className='rpb '+(rpe<=6?'sl':rpe<=8?'sm':'sh');
+  var rv=[5,6,7,8,9,10];
+  for(var r=0;r<rv.length;r++){var b=document.getElementById('rb-'+i+'-'+rv[r]);if(b)b.className='rpb';}
+  var b=document.getElementById('rb-'+i+'-'+rpe);
+  if(b)b.className='rpb '+(rpe<=6?'sl':rpe<=8?'sm':'sh');
 }
 
 function closeSess(){
@@ -702,16 +836,24 @@ function closeSess(){
   state.session=null;
 }
 
-async function logSess(){
+function logSess(){
   var sess=SESSIONS[state.day];
   var block=getBlock(state.week);
   var date=new Date().toLocaleDateString('en-GB');
   var btn=document.getElementById('logBtn');
   var exercises=[];
   for(var i=0;i<sess.exercises.length;i++){
-    exercises.push({name:sess.exercises[i].name,sets:state.session.sets[i],reps:state.session.reps[i],weight:state.session.weights[i],rpe:state.session.rpe[i]||'---',notes:state.session.notes[i]||''});
+    exercises.push({
+      name:sess.exercises[i].name,
+      sets:state.session.sets[i],
+      reps:state.session.reps[i],
+      weight:state.session.weights[i],
+      rpe:state.session.rpe[i]||'--',
+      notes:state.session.notes[i]||''
+    });
   }
   var entry={date:date,week:state.week,block:block.name,day:state.day,sessionName:sess.name,sessionNotes:state.session.sessionNotes,exercises:exercises};
+  if(state.lastChecklist&&state.lastChecklist.date===date)entry.checklist=state.lastChecklist;
   state.logs.unshift(entry);
   for(var i=0;i<sess.exercises.length;i++){
     if(state.session.weights[i]!==null&&state.weights[sess.exercises[i].name]){
@@ -719,20 +861,34 @@ async function logSess(){
     }
   }
   saveState();
-  btn.disabled=true;btn.textContent='Syncing...';setSS('sy','Syncing...');
-  try{
-    var rows=[];
-    for(var i=0;i<exercises.length;i++){
-      rows.push({date:entry.date,week:entry.week,block:entry.block,day:entry.day,session_name:entry.sessionName,exercise:exercises[i].name,sets:String(exercises[i].sets),reps:String(exercises[i].reps),weight:exercises[i].weight||null,rpe:String(exercises[i].rpe),notes:exercises[i].notes,session_notes:entry.sessionNotes});
-    }
-    await sbI(rows);
-    setSS('ok','Synced');showToast('Session logged & synced','success');
-  }catch(e){setSS('er','Saved locally');showToast('Saved locally','');}
-  closeSess();
+  renderStreak();
+  checkOverload();
+  btn.disabled=true;
+  btn.textContent='Syncing...';
+  setSS('sy','Syncing...');
+  var rows=[];
+  for(var i=0;i<exercises.length;i++){
+    rows.push({date:entry.date,week:entry.week,block:entry.block,day:entry.day,session_name:entry.sessionName,exercise:exercises[i].name,sets:String(exercises[i].sets),reps:String(exercises[i].reps),weight:exercises[i].weight||null,rpe:String(exercises[i].rpe),notes:exercises[i].notes,session_notes:entry.sessionNotes});
+  }
+  sbI(rows).then(function(){
+    setSS('ok','Synced');
+    showToast('Session logged and synced','success');
+  }).catch(function(){
+    setSS('er','Saved locally');
+    showToast('Saved locally','');
+  }).then(function(){
+    closeSess();
+  });
 }
 
 var rI=null,rS=120,rD=120;
-function startR(s){if(rI)clearInterval(rI);rD=s;rS=s;var t=document.getElementById('restTimer');if(t){t.classList.add('active');var inp=document.getElementById('restInp');if(inp)inp.value=s;t.scrollIntoView({behavior:'smooth',block:'nearest'});}updRD();rI=setInterval(function(){rS--;updRD();if(rS<=0){clearInterval(rI);showToast('Rest done - next set!','success');}},1000);}
+function startR(s){
+  if(rI)clearInterval(rI);rD=s;rS=s;
+  var t=document.getElementById('restTimer');
+  if(t){t.classList.add('active');var inp=document.getElementById('restInp');if(inp)inp.value=s;t.scrollIntoView({behavior:'smooth',block:'nearest'});}
+  updRD();
+  rI=setInterval(function(){rS--;updRD();if(rS<=0){clearInterval(rI);showToast('Rest done - next set!','success');}},1000);
+}
 function updRD(){var el=document.getElementById('restDisp');if(!el)return;var a=Math.abs(rS);el.textContent=(rS<0?'+':'')+Math.floor(a/60)+':'+String(a%60).padStart(2,'0');el.style.color=rS<=10?'var(--err)':rS<=30?'#ffd147':'var(--ac2)';}
 function adjR(d){rS+=d;updRD();}
 function setR(v){rS=parseInt(v)||120;rD=rS;updRD();}
@@ -744,12 +900,11 @@ function renderProgress(){
   var keys=Object.keys(state.weights);
   for(var k=0;k<keys.length;k++){
     var n=keys[k];var d=state.weights[n];
-    var dispName=n.replace('Barbell ','').replace(' (DB)','');
-    var changeHTML=d.current>d.start?'up +'+((d.current-d.start).toFixed(1))+'kg':'same No change yet';
-    var parts=changeHTML.split(' ');var cls=parts[0];var txt=parts.slice(1).join(' ');
-    html+='<div class="lc"><div class="ln">'+dispName+'</div>'
+    var dn=n.replace('Barbell ','').replace(' (DB)','');
+    var up=d.current>d.start;
+    html+='<div class="lc"><div class="ln">'+dn+'</div>'
       +'<div class="lw">'+d.current+'<span class="lu">kg</span></div>'
-      +'<div class="lch '+cls+'">'+txt+'</div>'
+      +'<div class="lch '+(up?'up':'same')+'">'+(up?'Up +'+(d.current-d.start).toFixed(1)+'kg':'No change yet')+'</div>'
       +'<input class="lei" id="le-'+n.replace(/\s/g,'_')+'" type="number" value="'+d.current+'" step="0.1" onblur="saveLW(\''+n+'\',this.value)"/>'
       +'<button class="leb" onclick="togLE(\''+n+'\')">Edit</button></div>';
   }
@@ -760,7 +915,6 @@ function renderProgress(){
   document.getElementById('progPct').textContent=pct+'%';
   document.getElementById('progBar').style.width=pct+'%';
 }
-
 function togLE(n){var k=n.replace(/\s/g,'_');var inp=document.getElementById('le-'+k);inp.style.display=inp.style.display==='block'?'none':'block';if(inp.style.display==='block')inp.focus();}
 function saveLW(n,v){var val=parseFloat(v);if(isNaN(val)||val<0)return;if(!state.weights[n])state.weights[n]={start:val,current:val};state.weights[n].current=val;saveState();renderProgress();showToast('Weight updated','success');}
 
@@ -773,19 +927,21 @@ function renderHistory(){
     var exHTML='';
     for(var k=0;k<log.exercises.length;k++){
       var ex=log.exercises[k];
-      var rpeCls=!ex.rpe||ex.rpe==='---'?'':+ex.rpe<=6?'low':+ex.rpe<=8?'mid':'high';
-      exHTML+='<tr><td style="color:var(--tx)">'+ex.name+'</td><td style="color:var(--mu)">'+ex.sets+'x'+ex.reps+'</td>'
-        +'<td style="color:var(--ac)">'+(ex.weight?ex.weight+'kg':'---')+'</td>'
-        +'<td><span class="rc2 '+rpeCls+'">'+ex.rpe+'</span></td></tr>';
+      var rpeCls=(!ex.rpe||ex.rpe==='--')?'':+ex.rpe<=6?'low':+ex.rpe<=8?'mid':'high';
+      exHTML+='<tr><td style="color:var(--tx)">'+ex.name+'</td><td style="color:var(--mu)">'+ex.sets+'x'+ex.reps+'</td><td style="color:var(--ac)">'+(ex.weight?ex.weight+'kg':'--')+'</td><td><span class="rc2 '+rpeCls+'">'+ex.rpe+'</span></td></tr>';
       if(ex.notes)exHTML+='<tr><td colspan="4" style="color:var(--mu);font-size:11px;font-style:italic;padding-bottom:6px">'+ex.notes+'</td></tr>';
     }
-    html+='<div class="he"><div class="heh">'
-      +'<div><div class="het">Day '+log.day+' - '+log.sessionName+'</div>'
-      +'<div style="font-size:11px;color:var(--mu)">Week '+log.week+' · '+log.block+'</div></div>'
-      +'<div style="font-size:11px;color:var(--mu)">'+log.date+'</div></div>'
+    var checkHTML='';
+    if(log.checklist&&log.checklist.sleep){
+      var sleepLabels=['','Poor','OK','Good','Great'];
+      var energyLabels=['','Low','Medium','High','Fired up'];
+      var foodLabels=['','No','Light snack','Full meal'];
+      checkHTML='<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--bd);font-size:11px;color:var(--mu)">Pre-session: Sleep '+sleepLabels[log.checklist.sleep]+' / Energy '+energyLabels[log.checklist.energy]+' / Eaten: '+foodLabels[log.checklist.food]+'</div>';
+    }
+    html+='<div class="he"><div class="heh"><div><div class="het">Day '+log.day+' - '+log.sessionName+'</div><div style="font-size:11px;color:var(--mu)">Week '+log.week+' - '+log.block+'</div></div><div style="font-size:11px;color:var(--mu)">'+log.date+'</div></div>'
       +'<table class="ht"><tr><th>Exercise</th><th>Sets x Reps</th><th>Wt</th><th>RPE</th></tr>'+exHTML+'</table>'
       +(log.sessionNotes?'<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--bd);font-size:12px;color:var(--mu);font-style:italic">'+log.sessionNotes+'</div>':'')
-      +'</div>';
+      +checkHTML+'</div>';
   }
   el.innerHTML=html;
 }
@@ -794,16 +950,15 @@ function renderProg(){
   var h='';
   for(var b=0;b<BLOCKS.length;b++){
     var block=BLOCKS[b];
-    h+='<div class="card"><div class="ct">'+block.name+' block <span class="badge '+block.badge+'">'+block.name+'</span></div>'
-      +'<div class="cs">Weeks '+block.weeks[0]+'-'+block.weeks[block.weeks.length-1]+' · '+block.sets+' sets · '+block.reps+' reps · RPE '+block.rpe+'</div>';
+    h+='<div class="card"><div class="ct">'+block.name+' block <span class="badge '+block.badge+'">'+block.name+'</span></div><div class="cs">Weeks '+block.weeks[0]+'-'+block.weeks[block.weeks.length-1]+' / '+block.sets+' sets / '+block.reps+' reps / RPE '+block.rpe+'</div>';
     for(var d=1;d<=5;d++){
       var s=SESSIONS[d];
       h+='<div class="pd"><div class="pdh"><span class="pdn">Day '+d+' - '+s.name+'</span><span class="pdf">'+s.focus+'</span></div>';
       for(var e=0;e<s.exercises.length;e++){
         var ex=s.exercises[e];
-        var benchStr=ex.bench&&ex.bench!=='---'?' · '+ex.bench:'';
+        var benchStr=ex.bench?' - '+ex.bench:'';
         h+='<div class="pex">'+ex.name+' - '+ex.sets+'x'+ex.reps+(ex.weight?' @ '+ex.weight+'kg':'')+benchStr+'</div>';
-        if(ex.notes)h+='<div style="font-size:11px;color:var(--mu2);padding:1px 0 4px 0;font-style:italic">'+ex.notes+'</div>';
+        if(ex.notes)h+='<div style="font-size:11px;color:var(--mu2);padding:1px 0 4px;font-style:italic">'+ex.notes+'</div>';
       }
       h+='</div>';
     }
@@ -819,7 +974,7 @@ function renderHealth(){
   document.getElementById('g-sleep-s').textContent=g.sleep>=75?'Good':g.sleep>=50?'Moderate':'Poor';
   document.getElementById('g-sleep-s').className='hm-status '+(g.sleep>=75?'good':g.sleep>=50?'warn':'bad');
   document.getElementById('g-bb').textContent=(g.bb>0?'+':'')+g.bb;
-  document.getElementById('g-bb-s').textContent=g.bb>20?'Recovering':g.bb>0?'Low recovery':'Draining';
+  document.getElementById('g-bb-s').textContent=g.bb>20?'Recovering':g.bb>0?'Low':'Draining';
   document.getElementById('g-bb-s').className='hm-status '+(g.bb>20?'good':g.bb>0?'warn':'bad');
   document.getElementById('g-rhr').textContent=g.rhr;
   document.getElementById('g-ohr').textContent=g.ohr;
@@ -837,20 +992,16 @@ function renderHealth(){
   document.getElementById('g-tstatus').textContent=g.tstatus;
   document.getElementById('g-tsub').textContent=g.tsub;
   var m=state.mfp;
-  document.getElementById('m-cal').textContent=m.cal||'---';
-  document.getElementById('m-target').textContent=m.target||'---';
-  document.getElementById('m-pro').textContent=m.pro||'---';
-  document.getElementById('m-carb').textContent=m.carb||'---';
-  document.getElementById('m-fat').textContent=m.fat||'---';
-  document.getElementById('m-water').textContent=m.water||'---';
-  var rhinoData=state.rhino.m;
-  for(var i=0;i<rhinoData.length;i++){
+  document.getElementById('m-cal').textContent=m.cal||'--';
+  document.getElementById('m-target').textContent=m.target||'--';
+  document.getElementById('m-pro').textContent=m.pro||'--';
+  document.getElementById('m-carb').textContent=m.carb||'--';
+  document.getElementById('m-fat').textContent=m.fat||'--';
+  document.getElementById('m-water').textContent=m.water||'--';
+  for(var i=0;i<state.rhino.m.length;i++){
     var idx=i+1;var card=document.getElementById('rh-m'+idx);
-    if(rhinoData[i].name&&rhinoData[i].val){
-      card.style.display='block';
-      document.getElementById('rh-l'+idx).textContent=rhinoData[i].name;
-      document.getElementById('rh-v'+idx).textContent=rhinoData[i].val;
-    }else{card.style.display='none';}
+    if(state.rhino.m[i].name&&state.rhino.m[i].val){card.style.display='block';document.getElementById('rh-l'+idx).textContent=state.rhino.m[i].name;document.getElementById('rh-v'+idx).textContent=state.rhino.m[i].val;}
+    else{card.style.display='none';}
   }
 }
 
@@ -869,15 +1020,11 @@ function updateMFP(){
   var map={cal:'u-cal',target:'u-target',pro:'u-pro',carb:'u-carb',fat:'u-fat',water:'u-water'};
   var keys=Object.keys(map);
   for(var k=0;k<keys.length;k++){var v=document.getElementById(map[keys[k]]).value;if(v!=='')m[keys[k]]=parseFloat(v);}
-  saveState();renderHealth();showToast('Nutrition data updated','success');
+  saveState();renderHealth();showToast('MFP data updated','success');
 }
 
 function updateRhino(){
-  for(var i=1;i<=4;i++){
-    var n=document.getElementById('rh-name'+i).value;
-    var v=document.getElementById('rh-val'+i).value;
-    if(n||v)state.rhino.m[i-1]={name:n,val:v};
-  }
+  for(var i=1;i<=4;i++){var n=document.getElementById('rh-name'+i).value;var v=document.getElementById('rh-val'+i).value;if(n||v)state.rhino.m[i-1]={name:n,val:v};}
   saveState();renderHealth();showToast('Rhino data saved','success');
 }
 
@@ -891,13 +1038,10 @@ function logNutrition(){
   var existing=-1;
   for(var i=0;i<state.nutrition.logs.length;i++){if(state.nutrition.logs[i].date===today){existing=i;break;}}
   var entry={date:today,cal:cal,pro:pro,carb:carb,fat:fat};
-  if(existing>=0)state.nutrition.logs[existing]=entry;
-  else state.nutrition.logs.unshift(entry);
+  if(existing>=0)state.nutrition.logs[existing]=entry;else state.nutrition.logs.unshift(entry);
   saveState();renderNutrition();
-  document.getElementById('td-cal').value='';
-  document.getElementById('td-pro').value='';
-  document.getElementById('td-carb').value='';
-  document.getElementById('td-fat').value='';
+  document.getElementById('td-cal').value='';document.getElementById('td-pro').value='';
+  document.getElementById('td-carb').value='';document.getElementById('td-fat').value='';
   showToast('Nutrition logged','success');
 }
 
@@ -907,8 +1051,7 @@ function logWeight(){
   var today=new Date().toLocaleDateString('en-GB');
   var existing=-1;
   for(var i=0;i<state.nutrition.weightLog.length;i++){if(state.nutrition.weightLog[i].date===today){existing=i;break;}}
-  if(existing>=0)state.nutrition.weightLog[existing]={date:today,weight:v};
-  else state.nutrition.weightLog.unshift({date:today,weight:v});
+  if(existing>=0)state.nutrition.weightLog[existing]={date:today,weight:v};else state.nutrition.weightLog.unshift({date:today,weight:v});
   state.bodyWeight=v;
   saveState();renderNutrition();renderProgress();
   document.getElementById('wt-inp').value='';
@@ -917,16 +1060,13 @@ function logWeight(){
 
 function renderNutrition(){
   var today=new Date().toLocaleDateString('en-GB');
-  var todayLog=null;
-  for(var i=0;i<state.nutrition.logs.length;i++){if(state.nutrition.logs[i].date===today){todayLog=state.nutrition.logs[i];break;}}
-  var cal=todayLog?todayLog.cal:0;
-  var pro=todayLog?todayLog.pro:0;
-  var carb=todayLog?todayLog.carb:0;
-  var fat=todayLog?todayLog.fat:0;
-  document.getElementById('n-cal').textContent=cal||'---';
-  document.getElementById('n-pro').textContent=pro||'---';
-  document.getElementById('n-carb').textContent=carb||'---';
-  document.getElementById('n-fat').textContent=fat||'---';
+  var tl=null;
+  for(var i=0;i<state.nutrition.logs.length;i++){if(state.nutrition.logs[i].date===today){tl=state.nutrition.logs[i];break;}}
+  var cal=tl?tl.cal:0,pro=tl?tl.pro:0,carb=tl?tl.carb:0,fat=tl?tl.fat:0;
+  document.getElementById('n-cal').textContent=cal||'--';
+  document.getElementById('n-pro').textContent=pro||'--';
+  document.getElementById('n-carb').textContent=carb||'--';
+  document.getElementById('n-fat').textContent=fat||'--';
   var calPct=Math.min(100,Math.round((cal/2100)*100));
   document.getElementById('n-cal-bar').style.width=calPct+'%';
   document.getElementById('n-cal-bar').style.background=cal>2300?'var(--err)':cal>2100?'#ffd147':'var(--ac)';
@@ -938,14 +1078,14 @@ function renderNutrition(){
   document.getElementById('n-fat-bar').style.width=Math.min(100,Math.round((fat/75)*100))+'%';
   var last7=state.nutrition.logs.slice(0,7);
   if(last7.length){
-    var sumCal=0,sumPro=0,sumCarb=0,sumFat=0;
-    for(var i=0;i<last7.length;i++){sumCal+=last7[i].cal||0;sumPro+=last7[i].pro||0;sumCarb+=last7[i].carb||0;sumFat+=last7[i].fat||0;}
+    var sc=0,sp=0,scb=0,sf=0;
+    for(var i=0;i<last7.length;i++){sc+=last7[i].cal||0;sp+=last7[i].pro||0;scb+=last7[i].carb||0;sf+=last7[i].fat||0;}
     var n=last7.length;
-    document.getElementById('avg-cal').textContent=Math.round(sumCal/n)||'---';
-    document.getElementById('avg-pro').textContent=Math.round(sumPro/n)||'---';
-    document.getElementById('avg-carb').textContent=Math.round(sumCarb/n)||'---';
-    document.getElementById('avg-fat').textContent=Math.round(sumFat/n)||'---';
-    document.getElementById('avg-pro-bar').style.width=Math.min(100,Math.round(((sumPro/n)/194)*100))+'%';
+    document.getElementById('avg-cal').textContent=Math.round(sc/n)||'--';
+    document.getElementById('avg-pro').textContent=Math.round(sp/n)||'--';
+    document.getElementById('avg-carb').textContent=Math.round(scb/n)||'--';
+    document.getElementById('avg-fat').textContent=Math.round(sf/n)||'--';
+    document.getElementById('avg-pro-bar').style.width=Math.min(100,Math.round(((sp/n)/194)*100))+'%';
   }
   renderWeightChart();
 }
@@ -954,9 +1094,11 @@ function renderWeightChart(){
   var el=document.getElementById('wt-chart');
   var logs=state.nutrition.weightLog.slice(0,10).reverse();
   if(!logs.length){el.innerHTML='<div style="text-align:center;color:var(--mu);font-size:12px;padding:16px 0">Log your weight daily to see trend</div>';return;}
-  var weights=logs.map(function(l){return l.weight;});
-  var minW=Math.min.apply(null,weights.concat([75]))-1;
-  var maxW=Math.max.apply(null,weights.concat([88]))+1;
+  var weights=[];
+  for(var i=0;i<logs.length;i++)weights.push(logs[i].weight);
+  var allW=weights.concat([75,88]);
+  var minW=Math.min.apply(null,allW)-1;
+  var maxW=Math.max.apply(null,allW)+1;
   var range=maxW-minW;
   var w=300,h=80;
   var pts='';
@@ -964,52 +1106,42 @@ function renderWeightChart(){
   for(var i=0;i<logs.length;i++){
     var x=logs.length===1?w/2:(i/(logs.length-1))*(w-20)+10;
     var y=h-((logs[i].weight-minW)/range)*(h-10)-5;
-    pts+=x+','+y+' ';
+    pts+=x+','+y+(i<logs.length-1?' ':'');
     circles+='<circle cx="'+x+'" cy="'+y+'" r="3" fill="var(--ac)"/>';
     circles+='<text x="'+x+'" y="'+(y-7)+'" text-anchor="middle" font-size="9" fill="var(--mu)">'+logs[i].weight+'</text>';
   }
-  var targetY=h-((75-minW)/range)*(h-10)-5;
+  var ty=h-((75-minW)/range)*(h-10)-5;
   el.innerHTML='<svg width="100%" viewBox="0 0 '+w+' '+h+'">'
-    +'<polyline points="'+pts.trim()+'" fill="none" stroke="var(--ac)" stroke-width="2" stroke-linejoin="round"/>'
+    +'<polyline points="'+pts+'" fill="none" stroke="var(--ac)" stroke-width="2" stroke-linejoin="round"/>'
     +circles
-    +'<line x1="0" y1="'+targetY+'" x2="'+w+'" y2="'+targetY+'" stroke="var(--ok)" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>'
-    +'</svg>'
-    +'<div style="font-size:10px;color:var(--ok);margin-top:2px">- - 75kg target</div>';
+    +'<line x1="0" y1="'+ty+'" x2="'+w+'" y2="'+ty+'" stroke="var(--ok)" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>'
+    +'</svg><div style="font-size:10px;color:var(--ok);margin-top:2px">- - 75kg target</div>';
 }
 
 function renderRecovery(){
   var g=state.garmin;
-  var sleepScore=Math.round((g.sleep/100)*25);
-  var hrvScore=Math.round(Math.min(g.hrv/100,1)*25);
-  var stressScore=Math.round(((100-g.stress)/100)*25);
-  var rhrScore=Math.round((Math.max(0,70-g.rhr)/30)*25);
-  var total=Math.min(100,sleepScore+hrvScore+stressScore+rhrScore);
+  var sleepS=Math.round((g.sleep/100)*25);
+  var hrvS=Math.round(Math.min(g.hrv/100,1)*25);
+  var stressS=Math.round(((100-g.stress)/100)*25);
+  var rhrS=Math.round((Math.max(0,70-g.rhr)/30)*25);
+  var total=Math.min(100,sleepS+hrvS+stressS+rhrS);
   var arc=document.getElementById('rec-arc');
-  if(arc){
-    var offset=239-(total/100)*239;
-    arc.style.strokeDashoffset=offset;
-    arc.style.stroke=total>=70?'var(--ok)':total>=45?'#ffd147':'var(--err)';
-  }
+  if(arc){arc.style.strokeDashoffset=239-(total/100)*239;arc.style.stroke=total>=70?'var(--ok)':total>=45?'#ffd147':'var(--err)';}
   var numEl=document.getElementById('rec-num');
-  if(numEl){
-    numEl.textContent=total;
-    numEl.style.color=total>=70?'var(--ok)':total>=45?'#ffd147':'var(--err)';
-  }
+  if(numEl){numEl.textContent=total;numEl.style.color=total>=70?'var(--ok)':total>=45?'#ffd147':'var(--err)';}
   var label,advice;
-  if(total>=80){label='Ready to train hard';advice='All systems green. Push hard today - this is when you make progress.';}
-  else if(total>=65){label='Good to train';advice='Solid recovery. Train as programmed. No need to hold back.';}
+  if(total>=80){label='Ready to train hard';advice='All systems green. Push hard today - this is when progress happens.';}
+  else if(total>=65){label='Good to train';advice='Solid recovery. Train as programmed, no need to hold back.';}
   else if(total>=45){label='Train with caution';advice='Moderate recovery. Stay at the lower end of your RPE targets. No PRs today.';}
-  else{label='Consider rest or deload';advice='Poor recovery. A lighter session or rest day will serve you better than pushing through right now.';}
-  var lbl=document.getElementById('rec-label');
-  var adv=document.getElementById('rec-advice');
-  if(lbl){lbl.textContent=label;lbl.style.color=total>=70?'var(--ok)':total>=45?'#ffd147':'var(--err)';}
-  if(adv)adv.textContent=advice;
-  var sl=document.getElementById('rc-sleep');var sh=document.getElementById('rc-hrv');
-  var ss=document.getElementById('rc-stress');var sr=document.getElementById('rc-rhr');
-  if(sl)sl.textContent=g.sleep;
-  if(sh)sh.textContent=g.hrv+'ms';
-  if(ss)ss.textContent=g.stress;
-  if(sr)sr.textContent=g.rhr;
+  else{label='Consider rest or deload';advice='Poor recovery. A lighter session or rest day will serve you better than pushing through.';}
+  var lEl=document.getElementById('rec-label');var aEl=document.getElementById('rec-advice');
+  if(lEl){lEl.textContent=label;lEl.style.color=total>=70?'var(--ok)':total>=45?'#ffd147':'var(--err)';}
+  if(aEl)aEl.textContent=advice;
+  var els={sleep:'rc-sleep',hrv:'rc-hrv',stress:'rc-stress',rhr:'rc-rhr'};
+  var el2=document.getElementById('rc-sleep');if(el2)el2.textContent=g.sleep;
+  var el3=document.getElementById('rc-hrv');if(el3)el3.textContent=g.hrv+'ms';
+  var el4=document.getElementById('rc-stress');if(el4)el4.textContent=g.stress;
+  var el5=document.getElementById('rc-rhr');if(el5)el5.textContent=g.rhr;
 }
 
 function saveBW(){var v=parseFloat(document.getElementById('bwInput').value);if(isNaN(v)||v<30||v>250){showToast('Enter a valid weight','error');return;}state.bodyWeight=v;saveState();showToast('Weight updated','success');}
@@ -1019,35 +1151,37 @@ function exportLog(){
   var t="MARK'S TRAINING LOG\n"+'='.repeat(50)+"\n\n";
   for(var j=0;j<state.logs.length;j++){
     var log=state.logs[j];
+    if(log.checklist&&log.checklist.sleep){
+      var sl=['','Poor','OK','Good','Great'];var en=['','Low','Medium','High','Fired up'];var fo=['','No','Light snack','Full meal'];
+      t+='Pre-session: Sleep '+sl[log.checklist.sleep]+' / Energy '+en[log.checklist.energy]+' / Eaten: '+fo[log.checklist.food]+'\n';
+    }
     t+=log.date+' - Day '+log.day+' '+log.sessionName+'\nWeek '+log.week+' | Block '+log.block+'\n\n';
     t+='Exercise                  | Sets x Reps | Weight | RPE | Notes\n'+'-'.repeat(68)+'\n';
-    for(var k=0;k<log.exercises.length;k++){
-      var ex=log.exercises[k];
-      t+=ex.name.padEnd(26)+'| '+String(ex.sets+'x'+ex.reps).padEnd(10)+'| '+String(ex.weight||'---').padEnd(7)+'| '+String(ex.rpe).padEnd(4)+'| '+ex.notes+'\n';
-    }
+    for(var k=0;k<log.exercises.length;k++){var ex=log.exercises[k];t+=ex.name.padEnd(26)+'| '+String(ex.sets+'x'+ex.reps).padEnd(10)+'| '+String(ex.weight||'--').padEnd(7)+'| '+String(ex.rpe).padEnd(4)+'| '+ex.notes+'\n';}
     if(log.sessionNotes)t+='\nSession notes: '+log.sessionNotes+'\n';
     t+='\n'+'-'.repeat(68)+'\n\n';
   }
   var g=state.garmin;
-  t+='\nGARMIN HEALTH DATA\n'+'-'.repeat(30)+'\n';
-  t+='Week: '+g.weekLabel+'\nSleep: '+g.sleep+'/100 | HRV: '+g.hrv+'ms | Resting HR: '+g.rhr+'bpm\nVO2 Max: '+g.vo2+' | Stress: '+g.stress+' | Training Load: '+g.load+'\nTraining Status: '+g.tstatus+'\n\n';
+  t+='\nGARMIN HEALTH\n'+'-'.repeat(30)+'\nSleep: '+g.sleep+' | HRV: '+g.hrv+'ms | RHR: '+g.rhr+'bpm | Stress: '+g.stress+' | VO2: '+g.vo2+' | Load: '+g.load+'\nStatus: '+g.tstatus+'\n';
   if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){showToast('Log copied','success');});}
   else{var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('Log copied','success');}
 }
 
-async function loadFromSupabase(){
-  try{
-    setSS('sy','Loading...');
-    var rows=await sbF();
+function loadFromSupabase(){
+  setSS('sy','Loading...');
+  sbF().then(function(rows){
     if(!rows||!rows.length){setSS('ok','Connected');return;}
     var sessMap={};
     for(var i=0;i<rows.length;i++){
       var row=rows[i];
       var key=row.date+'_w'+row.week+'_d'+row.day;
-      if(!sessMap[key]){sessMap[key]={date:row.date,week:row.week,block:row.block,day:row.day,sessionName:row.session_name,sessionNotes:row.session_notes||'',exercises:[]};}
+      if(!sessMap[key])sessMap[key]={date:row.date,week:row.week,block:row.block,day:row.day,sessionName:row.session_name,sessionNotes:row.session_notes||'',exercises:[]};
       sessMap[key].exercises.push({name:row.exercise,sets:row.sets,reps:row.reps,weight:row.weight,rpe:row.rpe,notes:row.notes||''});
     }
-    var sessions=Object.values(sessMap).sort(function(a,b){
+    var keys=Object.keys(sessMap);
+    var sessions=[];
+    for(var k=0;k<keys.length;k++)sessions.push(sessMap[keys[k]]);
+    sessions.sort(function(a,b){
       var da=a.date.split('/').reverse().join('-');
       var db=b.date.split('/').reverse().join('-');
       return new Date(db)-new Date(da);
@@ -1059,16 +1193,18 @@ async function loadFromSupabase(){
         if(ex.weight&&state.weights[ex.name])state.weights[ex.name].current=parseFloat(ex.weight);
       }
     }
-    saveState();renderWeekGrid();
+    saveState();renderWeekGrid();renderStreak();checkOverload();
     setSS('ok','Connected');
     showToast('Data loaded','success');
-  }catch(e){setSS('er','Offline');}
+  }).catch(function(){
+    setSS('er','Offline');
+  });
 }
 
 var tT=null;
 function showToast(msg,type){var t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+(type||'');if(tT)clearTimeout(tT);tT=setTimeout(function(){t.classList.remove('show');},2500);}
 
-loadState();renderWeekGrid();renderDayGrid();updSB();testConn();loadFromSupabase();
+loadState();renderWeekGrid();renderDayGrid();updSB();renderStreak();checkOverload();testConn();loadFromSupabase();
 </script>
 </body>
 </html>
