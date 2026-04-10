@@ -482,17 +482,34 @@ var SU='https://dofctputspabsyxbtmyg.supabase.co';
 var SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRvZmN0cHV0c3BhYnN5eGJ0bXlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjIxODUsImV4cCI6MjA5MTIzODE4NX0.o5ZDxragjYnicGnl7kZu7nrEn3IJ-sKd2vDwb-_kIvM';
 var SH={'Content-Type':'application/json','apikey':SK,'Authorization':'Bearer '+SK};
 
-function sbI(rows){return fetch(SU+'/rest/v1/sessions',{method:'POST',headers:Object.assign({},SH,{'Prefer':'return=minimal'}),body:JSON.stringify(rows)}).then(function(r){if(!r.ok)throw new Error(r.status);});}
-function sbF(){return fetch(SU+'/rest/v1/sessions?select=*&order=created_at.desc',{headers:SH}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json();});}
+function sbI(rows,cb){
+  fetch(SU+'/rest/v1/sessions',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':SK,'Authorization':'Bearer '+SK,'Prefer':'return=minimal'},
+    body:JSON.stringify(rows)
+  }).then(function(r){cb(r.ok?null:new Error(r.status));}).catch(function(e){cb(e);});
+}
+
+function sbF(cb){
+  fetch(SU+'/rest/v1/sessions?select=*&order=created_at.desc',{
+    headers:{'apikey':SK,'Authorization':'Bearer '+SK}
+  }).then(function(r){
+    if(r.ok){r.json().then(function(d){cb(null,d);}).catch(function(e){cb(e,null);});}
+    else{cb(new Error(r.status),null);}
+  }).catch(function(e){cb(e,null);});
+}
 
 function testConn(){
-  sbF().then(function(){
-    setSS('ok','Connected');
-    document.getElementById('connBar').classList.add('ok');
-    document.getElementById('connLabel').textContent='Connected to Supabase';
-  }).catch(function(){
-    setSS('er','Offline');
-    document.getElementById('connLabel').textContent='Connection failed';
+  sbF(function(err){
+    if(err){
+      setSS('er','Offline');
+      document.getElementById('connBar').classList.remove('ok');
+      document.getElementById('connLabel').textContent='Connection failed';
+    } else {
+      setSS('ok','Connected');
+      document.getElementById('connBar').classList.add('ok');
+      document.getElementById('connLabel').textContent='Connected to Supabase';
+    }
   });
 }
 function setSS(s,l){document.getElementById('sd').className='sd '+s;document.getElementById('sl').textContent=l;}
@@ -509,10 +526,10 @@ var SESSIONS={
   1:{name:'Push',type:'push',focus:'Chest / Shoulders / Triceps',exercises:[
     {name:'Barbell Bench Press',sets:4,reps:10,weight:18.1,bench:'Flat',rest:150,notes:'Main compound'},
     {name:'Incline Barbell Press',sets:3,reps:10,weight:18.1,bench:'Notch 2',rest:150,notes:'Upper chest'},
-    {name:'Incline DB Fly',sets:3,reps:12,weight:10,bench:'Notch 2',rest:75,notes:'Slow stretch at bottom'},
-    {name:'Seated DB OHP',sets:3,reps:12,weight:15,bench:'Notch 3 (backrest)',rest:150,notes:'Per hand'},
-    {name:'Lateral Raise (DB)',sets:3,reps:15,weight:10,bench:'Standing',rest:75,notes:'2s up, 3s down'},
-    {name:'1-Arm Overhead Extension',sets:3,reps:12,weight:7.5,bench:'Standing',rest:75,notes:'Per arm - full stretch at bottom'},
+    {name:'Incline DB Fly',sets:3,reps:12,weight:7.5,bench:'Notch 2',rest:75,notes:'Per hand - up from 5kg. Slow stretch at bottom.'},
+    {name:'Seated DB OHP',sets:3,reps:12,weight:10,bench:'Notch 3 (backrest)',rest:150,notes:'Per hand - testing 10kg, drop to 7.5 if RPE hits 9+'},
+    {name:'1-Arm Overhead Extension',sets:3,reps:12,weight:7.5,bench:'Standing',rest:75,notes:'Per arm - full stretch at bottom. Done before laterals to avoid fatigue.'},
+    {name:'Lateral Raise (DB)',sets:3,reps:15,weight:5,bench:'Standing',rest:90,notes:'Per hand - 2s up, 3s down. Full 90s rest between sets.'},
     {name:'Plank',sets:3,reps:'30s',weight:null,bench:'Floor',rest:60,notes:'Core finisher'}
   ]},
   2:{name:'Cardio',type:'cardio',focus:'Gibala HIIT / 10 min',exercises:[
@@ -521,37 +538,37 @@ var SESSIONS={
     {name:'Cool-down',sets:1,reps:'2 min',weight:null,bench:'',rest:0,notes:'Easy walking, slow breathing, let heart rate come down fully.'}
   ]},
   3:{name:'Pull',type:'pull',focus:'Back / Biceps',exercises:[
-    {name:'Barbell Bent Over Row',sets:4,reps:10,weight:18.1,bench:'Standing',rest:150,notes:'Main compound'},
-    {name:'Pendlay Row',sets:3,reps:8,weight:18.1,bench:'Standing',rest:150,notes:'Reset to floor each rep'},
-    {name:'Chest Supported DB Row',sets:3,reps:12,weight:10,bench:'Notch 2 (chest down)',rest:90,notes:'Strict - no swing'},
+    {name:'Barbell Bent Over Row',sets:4,reps:10,weight:22.7,bench:'Standing',rest:150,notes:'Main compound - up from 18.1kg'},
+    {name:'Barbell Bent Over Row (top set)',sets:1,reps:6,weight:22.7,bench:'Standing',rest:150,notes:'Heavy top set - replaces Pendlay Row. RPE 8-9.'},
+    {name:'Chest Supported DB Row',sets:3,reps:12,weight:10,bench:'Notch 2 (chest down)',rest:90,notes:'Per hand - up from 5kg. Strict - no swing.'},
     {name:'Barbell Curl',sets:3,reps:10,weight:18.1,bench:'Standing',rest:75,notes:'Full ROM'},
-    {name:'Incline DB Curl',sets:3,reps:12,weight:15,bench:'Notch 3',rest:75,notes:'Long head stretch'},
-    {name:'Hammer Curl',sets:3,reps:12,weight:15,bench:'Standing',rest:75,notes:'Neutral grip'},
-    {name:'Preacher Curl',sets:2,reps:15,weight:7.5,bench:'Bench setup',rest:60,notes:'Peak contraction finisher'}
+    {name:'Incline DB Curl',sets:3,reps:12,weight:10,bench:'Notch 3',rest:75,notes:'Per hand - up from 7.5kg. Long head stretch.'},
+    {name:'Hammer Curl',sets:3,reps:12,weight:10,bench:'Standing',rest:75,notes:'Per hand - up from 7.5kg. Neutral grip.'},
+    {name:'Preacher Curl',sets:2,reps:15,weight:7.5,bench:'Bench setup',rest:60,notes:'Per arm - bench too narrow for both. 2 sets each arm = 4 sets total.'}
   ]},
   4:{name:'Cardio',type:'cardio',focus:'Walking pad / 30-45 min',exercises:[
     {name:'Walking pad - steady state',sets:1,reps:'30-45 min',weight:null,bench:'',rest:0,notes:'Low intensity. Conversational pace. NEAT and active recovery - do not skip this.'}
   ]},
   5:{name:'Legs + Shoulders',type:'legs',focus:'Quads / Posterior / Delts',exercises:[
-    {name:'Barbell Back Squat',sets:4,reps:10,weight:18.1,bench:'Squat',rest:150,notes:'Primary compound'},
+    {name:'Barbell Back Squat',sets:4,reps:10,weight:18.1,bench:'Squat',rest:150,notes:'Note if too light - ready to move to 22.7kg'},
     {name:'Goblet Squat',sets:3,reps:15,weight:7.5,bench:'Standing',rest:90,notes:'Full depth'},
     {name:'Conventional Deadlift',sets:3,reps:8,weight:18.1,bench:'Floor',rest:150,notes:'Hip hinge - braced core'},
     {name:'Romanian Deadlift',sets:3,reps:10,weight:18.1,bench:'Floor',rest:120,notes:'Hamstring stretch - soft knee'},
     {name:'Barbell OHP',sets:3,reps:10,weight:18.1,bench:'Standing',rest:150,notes:'Vertical press'},
-    {name:'Rear Delt Fly (DB)',sets:3,reps:15,weight:10,bench:'Hinged',rest:75,notes:'Light, controlled, full ROM'},
+    {name:'Rear Delt Fly (DB)',sets:3,reps:15,weight:5,bench:'Hinged',rest:75,notes:'Per hand - light, controlled, full ROM'},
     {name:'Standing Calf Raise',sets:3,reps:15,weight:null,bench:'Standing',rest:60,notes:'Full stretch at bottom'}
   ]}
 };
 
 var DW={
   'Barbell Bench Press':{start:18.1,current:18.1},'Incline Barbell Press':{start:18.1,current:18.1},
-  'Barbell Bent Over Row':{start:18.1,current:18.1},'Pendlay Row':{start:18.1,current:18.1},
+  'Barbell Bent Over Row':{start:18.1,current:22.7},'Barbell Bent Over Row (top set)':{start:22.7,current:22.7},
   'Barbell Curl':{start:18.1,current:18.1},'Barbell Back Squat':{start:18.1,current:18.1},
   'Conventional Deadlift':{start:18.1,current:18.1},'Romanian Deadlift':{start:18.1,current:18.1},
-  'Barbell OHP':{start:18.1,current:18.1},'Seated DB OHP':{start:15,current:15},
-  'Incline DB Curl':{start:15,current:15},'Hammer Curl':{start:15,current:15},
-  'Chest Supported DB Row':{start:10,current:10},'Incline DB Fly':{start:10,current:10},
-  'Lateral Raise (DB)':{start:10,current:10},'Rear Delt Fly (DB)':{start:10,current:10},
+  'Barbell OHP':{start:18.1,current:18.1},'Seated DB OHP':{start:7.5,current:10},
+  'Incline DB Curl':{start:7.5,current:10},'Hammer Curl':{start:7.5,current:10},
+  'Chest Supported DB Row':{start:5,current:10},'Incline DB Fly':{start:5,current:7.5},
+  'Lateral Raise (DB)':{start:5,current:5},'Rear Delt Fly (DB)':{start:5,current:5},
   'Preacher Curl':{start:7.5,current:7.5},'1-Arm Overhead Extension':{start:7.5,current:7.5},
   'Goblet Squat':{start:7.5,current:7.5}
 };
@@ -559,9 +576,9 @@ var DW={
 var state={
   week:1,day:1,logs:[],
   weights:JSON.parse(JSON.stringify(DW)),
-  bodyWeight:88,session:null,
-  garmin:{sleep:62,bb:37,rhr:57,ohr:67,hrv:64,stress:43,vo2:43,load:42,respS:18,respA:16,tstatus:'Recovery',tsub:'Load Focus: High Aerobic Shortage',weekLabel:'2-8 Apr'},
-  mfp:{cal:null,target:null,pro:null,carb:null,fat:null,water:null},
+  bodyWeight:86.8,session:null,
+  garmin:{sleep:61,bb:36,rhr:57,ohr:68,hrv:62,stress:43,vo2:43,load:42,respS:18,respA:16,tstatus:'Recovery',tsub:'Low training load - body adapting well',weekLabel:'4-10 Apr'},
+  mfp:{cal:null,target:1800,pro:null,carb:null,fat:null,water:null},
   rhino:{m:[{name:'',val:''},{name:'',val:''},{name:'',val:''},{name:'',val:''}]},
   nutrition:{logs:[],weightLog:[]}
 };
@@ -763,11 +780,24 @@ function openSess(){
 function buildSessHTML(sess,block){
   var exHTML='';
   for(var i=0;i<sess.exercises.length;i++)exHTML+=buildExHTML(sess.exercises[i],i);
+  var hiitHTML='';
+  if(sess.type==='cardio'&&state.day===2){
+    hiitHTML='<div id="hiit-timer" style="background:var(--s2);border:2px solid var(--ac);border-radius:14px;padding:20px;margin-bottom:16px;text-align:center">'
+      +'<div style="font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Gibala HIIT Timer</div>'
+      +'<div style="font-size:14px;font-weight:600;letter-spacing:1px;margin-bottom:4px" id="hiit-phase-label">Ready</div>'
+      +'<div style="font-size:72px;font-weight:700;line-height:1;margin-bottom:4px" id="hiit-time">0:20</div>'
+      +'<div style="font-size:12px;color:var(--mu);margin-bottom:16px" id="hiit-round-label">Warm up first, then tap Start</div>'
+      +'<div style="display:flex;gap:8px;justify-content:center">'
+      +'<button id="hiit-start-btn" onclick="hiitStart()" style="flex:1;max-width:160px;padding:14px;background:var(--ac);color:#0f0f0f;border:none;border-radius:10px;font-size:20px;font-weight:700;cursor:pointer">Start</button>'
+      +'<button onclick="hiitReset()" style="padding:14px 16px;background:var(--s3);border:1px solid var(--bd);border-radius:10px;font-size:13px;color:var(--mu);cursor:pointer">Reset</button>'
+      +'</div></div>';
+  }
   return '<div style="margin-bottom:16px">'
     +'<button class="bbtn" onclick="closeSess()">Back</button>'
     +'<div class="stl">Day '+state.day+' - '+sess.name+'</div>'
     +'<div class="smt">Week '+state.week+' <span class="badge '+block.badge+'">'+block.name+'</span> '+block.rpe+' RPE</div>'
     +'</div>'
+    +hiitHTML
     +'<div class="rt" id="restTimer"><div class="rl">Rest timer</div><div class="rtm" id="restDisp">2:00</div>'
     +'<div class="rc"><button class="rcb" onclick="adjR(-30)">-30s</button>'
     +'<input class="rdi" id="restInp" type="number" value="120" min="10" max="600" onchange="setR(this.value)"/>'
@@ -870,13 +900,14 @@ function logSess(){
   for(var i=0;i<exercises.length;i++){
     rows.push({date:entry.date,week:entry.week,block:entry.block,day:entry.day,session_name:entry.sessionName,exercise:exercises[i].name,sets:String(exercises[i].sets),reps:String(exercises[i].reps),weight:exercises[i].weight||null,rpe:String(exercises[i].rpe),notes:exercises[i].notes,session_notes:entry.sessionNotes});
   }
-  sbI(rows).then(function(){
-    setSS('ok','Synced');
-    showToast('Session logged and synced','success');
-  }).catch(function(){
-    setSS('er','Saved locally');
-    showToast('Saved locally','');
-  }).then(function(){
+  sbI(rows,function(err){
+    if(err){
+      setSS('er','Saved locally');
+      showToast('Saved locally','');
+    } else {
+      setSS('ok','Synced');
+      showToast('Session logged and synced','success');
+    }
     closeSess();
   });
 }
@@ -1163,13 +1194,14 @@ function exportLog(){
   }
   var g=state.garmin;
   t+='\nGARMIN HEALTH\n'+'-'.repeat(30)+'\nSleep: '+g.sleep+' | HRV: '+g.hrv+'ms | RHR: '+g.rhr+'bpm | Stress: '+g.stress+' | VO2: '+g.vo2+' | Load: '+g.load+'\nStatus: '+g.tstatus+'\n';
-  if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){showToast('Log copied','success');});}
+  if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){showToast('Log copied','success');},function(){copyFallback(t);});}
   else{var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('Log copied','success');}
 }
 
 function loadFromSupabase(){
   setSS('sy','Loading...');
-  sbF().then(function(rows){
+  sbF(function(err,rows){
+    if(err){setSS('er','Offline');return;}
     if(!rows||!rows.length){setSS('ok','Connected');return;}
     var sessMap={};
     for(var i=0;i<rows.length;i++){
@@ -1196,13 +1228,124 @@ function loadFromSupabase(){
     saveState();renderWeekGrid();renderStreak();checkOverload();
     setSS('ok','Connected');
     showToast('Data loaded','success');
-  }).catch(function(){
-    setSS('er','Offline');
   });
+}
+
+// HIIT TIMER
+var hiitInterval=null;
+var hiitPhase='idle'; // idle, sprint, rest, done
+var hiitRound=0;
+var hiitSecs=0;
+var hiitTotalRounds=3;
+var hiitSprintSecs=20;
+var hiitRestSecs=120;
+
+function hiitBeep(type){
+  try{
+    var ctx=new (window.AudioContext||window.webkitAudioContext)();
+    var osc=ctx.createOscillator();
+    var gain=ctx.createGain();
+    osc.connect(gain);gain.connect(ctx.destination);
+    if(type==='start'){osc.frequency.value=880;gain.gain.value=0.3;}
+    else if(type==='stop'){osc.frequency.value=440;gain.gain.value=0.3;}
+    else if(type==='done'){osc.frequency.value=660;gain.gain.value=0.3;}
+    osc.start();
+    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.4);
+    osc.stop(ctx.currentTime+0.4);
+  }catch(e){}
+}
+
+function hiitStart(){
+  if(hiitPhase==='idle'||hiitPhase==='done'){
+    hiitRound=0;
+    hiitPhase='sprint';
+    hiitSecs=hiitSprintSecs;
+    hiitRound=1;
+    hiitBeep('start');
+    hiitTick();
+    if(hiitInterval)clearInterval(hiitInterval);
+    hiitInterval=setInterval(hiitTick,1000);
+    document.getElementById('hiit-start-btn').textContent='Running...';
+    document.getElementById('hiit-start-btn').style.background='var(--err)';
+    document.getElementById('hiit-start-btn').disabled=true;
+  }
+}
+
+function hiitTick(){
+  var timeEl=document.getElementById('hiit-time');
+  var phaseEl=document.getElementById('hiit-phase-label');
+  var roundEl=document.getElementById('hiit-round-label');
+  var timerEl=document.getElementById('hiit-timer');
+  if(!timeEl)return hiitReset();
+  hiitSecs--;
+  if(hiitSecs<=0){
+    if(hiitPhase==='sprint'){
+      hiitBeep('stop');
+      if(hiitRound>=hiitTotalRounds){
+        hiitPhase='done';
+        clearInterval(hiitInterval);
+        hiitBeep('done');
+        if(timeEl)timeEl.textContent='Done!';
+        if(phaseEl){phaseEl.textContent='Finished';phaseEl.style.color='var(--ok)';}
+        if(roundEl)roundEl.textContent='All 3 sprints complete. Cool down now.';
+        if(timerEl){timerEl.style.borderColor='var(--ok)';}
+        var btn=document.getElementById('hiit-start-btn');
+        if(btn){btn.textContent='Start again';btn.style.background='var(--ac)';btn.disabled=false;}
+        showToast('HIIT complete! Log your session.','success');
+        return;
+      }
+      hiitPhase='rest';
+      hiitSecs=hiitRestSecs;
+      if(phaseEl){phaseEl.textContent='REST';phaseEl.style.color='var(--inf)';}
+      if(roundEl)roundEl.textContent='Sprint '+hiitRound+' done. Rest 2 minutes.';
+      if(timerEl)timerEl.style.borderColor='var(--inf)';
+    } else if(hiitPhase==='rest'){
+      hiitRound++;
+      hiitPhase='sprint';
+      hiitSecs=hiitSprintSecs;
+      hiitBeep('start');
+      if(phaseEl){phaseEl.textContent='SPRINT '+hiitRound+' - GO!';phaseEl.style.color='var(--err)';}
+      if(roundEl)roundEl.textContent='Sprint '+hiitRound+' of '+hiitTotalRounds+' - flat out!';
+      if(timerEl)timerEl.style.borderColor='var(--err)';
+    }
+  } else {
+    var m=Math.floor(hiitSecs/60);var s=hiitSecs%60;
+    if(timeEl)timeEl.textContent=m+':'+String(s).padStart(2,'0');
+    if(hiitPhase==='sprint'){
+      timeEl.style.color='var(--err)';
+      if(phaseEl){phaseEl.textContent='SPRINT '+hiitRound+' - GO!';phaseEl.style.color='var(--err)';}
+      if(hiitSecs===hiitSprintSecs){
+        if(roundEl)roundEl.textContent='Sprint '+hiitRound+' of '+hiitTotalRounds+' - flat out!';
+      }
+    } else if(hiitPhase==='rest'){
+      timeEl.style.color='var(--inf)';
+      if(hiitSecs<=10&&hiitSecs>0){
+        if(phaseEl){phaseEl.textContent='GET READY!';phaseEl.style.color='#ffd147';}
+        if(hiitInterval&&hiitSecs===10)hiitBeep('start');
+      }
+    }
+  }
+}
+
+function hiitReset(){
+  if(hiitInterval)clearInterval(hiitInterval);
+  hiitPhase='idle';hiitRound=0;hiitSecs=0;
+  var timeEl=document.getElementById('hiit-time');
+  var phaseEl=document.getElementById('hiit-phase-label');
+  var roundEl=document.getElementById('hiit-round-label');
+  var timerEl=document.getElementById('hiit-timer');
+  var btn=document.getElementById('hiit-start-btn');
+  if(timeEl){timeEl.textContent='3:00';timeEl.style.color='var(--ac)';}
+  if(phaseEl){phaseEl.textContent='Ready';phaseEl.style.color='var(--tx)';}
+  if(roundEl)roundEl.textContent='Warm up first, then tap Start';
+  if(timerEl)timerEl.style.borderColor='var(--ac)';
+  if(btn){btn.textContent='Start';btn.style.background='var(--ac)';btn.disabled=false;}
 }
 
 var tT=null;
 function showToast(msg,type){var t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+(type||'');if(tT)clearTimeout(tT);tT=setTimeout(function(){t.classList.remove('show');},2500);}
+
+function copyFallback(text){var ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('Log copied','success');}
 
 loadState();renderWeekGrid();renderDayGrid();updSB();renderStreak();checkOverload();testConn();loadFromSupabase();
 </script>
