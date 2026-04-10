@@ -108,7 +108,7 @@ body{background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;font-
 .pd{padding:10px 0;border-top:1px solid var(--bd)}
 .pdh{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .pdn{font-weight:600;font-size:13px}.pdf{font-size:10px;color:var(--mu)}
-.pex{font-size:12px;color:var(--mu);padding:2px 0}
+.pex{font-size:12px;color:var(--tx);padding:2px 0;opacity:0.8}
 .htabs{display:flex;gap:0;margin-bottom:16px;background:var(--s2);border-radius:10px;padding:4px}
 .htab{flex:1;padding:8px 4px;background:transparent;border:none;color:var(--mu);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;border-radius:7px;transition:all .2s;text-align:center}
 .htab.active{background:var(--s1);color:var(--tx)}
@@ -989,7 +989,7 @@ function renderProg(){
         var ex=s.exercises[e];
         var benchStr=ex.bench?' - '+ex.bench:'';
         h+='<div class="pex">'+ex.name+' - '+ex.sets+'x'+ex.reps+(ex.weight?' @ '+ex.weight+'kg':'')+benchStr+'</div>';
-        if(ex.notes)h+='<div style="font-size:11px;color:var(--mu2);padding:1px 0 4px;font-style:italic">'+ex.notes+'</div>';
+        if(ex.notes)h+='<div style="font-size:11px;color:var(--tx);opacity:0.6;padding:1px 0 4px;font-style:italic">'+ex.notes+'</div>';
       }
       h+='</div>';
     }
