@@ -441,12 +441,12 @@ function getBlock(w){for(var i=0;i<BLOCKS.length;i++){if(BLOCKS[i].weeks.indexOf
 
 var SESSIONS={
   1:{name:'Push',type:'push',focus:'Chest / Shoulders / Triceps',exercises:[
-    {name:'Barbell Bench Press',sets:4,reps:10,weight:18.1,bench:'Flat',rest:150,notes:'Main compound'},
-    {name:'Incline Barbell Press',sets:3,reps:10,weight:18.1,bench:'Notch 2',rest:150,notes:'Upper chest'},
+    {name:'Barbell Bench Press',sets:4,reps:10,weight:22.7,bench:'Flat',rest:150,notes:'Main compound - up from 18.1kg'},
+    {name:'Incline Barbell Press',sets:3,reps:10,weight:22.7,bench:'Notch 2',rest:150,notes:'Upper chest - up from 18.1kg'},
     {name:'Incline DB Fly',sets:3,reps:12,weight:7.5,bench:'Notch 2',rest:75,notes:'Per hand - up from 5kg. Slow stretch at bottom.'},
     {name:'Seated DB OHP',sets:3,reps:12,weight:10,bench:'Notch 3 (backrest)',rest:150,notes:'Per hand - testing 10kg, drop to 7.5 if RPE hits 9+'},
-    {name:'1-Arm Overhead Extension',sets:3,reps:12,weight:7.5,bench:'Standing',rest:75,notes:'Per arm - full stretch at bottom. Done before laterals to avoid fatigue.'},
-    {name:'Lateral Raise (DB)',sets:3,reps:15,weight:5,bench:'Standing',rest:90,notes:'Per hand - 2s up, 3s down. Full 90s rest between sets.'},
+    {name:'1-Arm Overhead Extension',sets:2,reps:12,weight:7.5,bench:'Standing',rest:75,notes:'Per arm - 2 sets each arm = 4 total. Done before laterals to avoid fatigue.'},
+    {name:'Lateral Raise (DB)',sets:3,reps:10,weight:7.5,bench:'Standing',rest:90,notes:'Per hand - up from 5kg. Drop reps to 10, build to 15. 2s up, 3s down.'},
     {name:'Plank',sets:3,reps:'30s',weight:null,bench:'Floor',rest:60,notes:'Core finisher'}
   ]},
   2:{name:'Cardio',type:'cardio',focus:'Gibala HIIT / 10 min',exercises:[
@@ -456,36 +456,36 @@ var SESSIONS={
   ]},
   3:{name:'Pull',type:'pull',focus:'Back / Biceps',exercises:[
     {name:'Barbell Bent Over Row',sets:4,reps:10,weight:22.7,bench:'Standing',rest:150,notes:'Main compound - up from 18.1kg'},
-    {name:'Barbell Bent Over Row (top set)',sets:1,reps:6,weight:22.7,bench:'Standing',rest:150,notes:'Heavy top set - replaces Pendlay Row. RPE 8-9.'},
+    {name:'Barbell Bent Over Row (top set)',sets:1,reps:6,weight:27.2,bench:'Standing',rest:150,notes:'Heavy top set - hold at 27.2kg one more session before 31.1kg.'},
     {name:'Chest Supported DB Row',sets:3,reps:12,weight:10,bench:'Notch 2 (chest down)',rest:90,notes:'Per hand - up from 5kg. Strict - no swing.'},
     {name:'Barbell Curl',sets:3,reps:10,weight:18.1,bench:'Standing',rest:75,notes:'Full ROM'},
-    {name:'Incline DB Curl',sets:3,reps:12,weight:10,bench:'Notch 3',rest:75,notes:'Per hand - up from 7.5kg. Long head stretch.'},
-    {name:'Hammer Curl',sets:3,reps:12,weight:10,bench:'Standing',rest:75,notes:'Per hand - up from 7.5kg. Neutral grip.'},
+    {name:'Incline DB Curl',sets:3,reps:12,weight:7.5,bench:'Notch 3',rest:75,notes:'Per hand - back to 7.5kg. 10kg was too heavy with form breaking down.'},
+    {name:'Hammer Curl',sets:3,reps:12,weight:7.5,bench:'Standing',rest:75,notes:'Per hand - back to 7.5kg. 10kg caused rep drops.'},
     {name:'Preacher Curl',sets:2,reps:15,weight:7.5,bench:'Bench setup',rest:60,notes:'Per arm - bench too narrow for both. 2 sets each arm = 4 sets total.'}
   ]},
   4:{name:'Cardio',type:'cardio',focus:'Walking pad / 30-45 min',exercises:[
     {name:'Walking pad - steady state',sets:1,reps:'30-45 min',weight:null,bench:'',rest:0,notes:'Low intensity. Conversational pace. NEAT and active recovery - do not skip this.'}
   ]},
   5:{name:'Legs + Shoulders',type:'legs',focus:'Quads / Posterior / Delts',exercises:[
-    {name:'Barbell Back Squat',sets:4,reps:10,weight:18.1,bench:'Squat',rest:150,notes:'Note if too light - ready to move to 22.7kg'},
-    {name:'Goblet Squat',sets:3,reps:15,weight:7.5,bench:'Standing',rest:90,notes:'Full depth'},
-    {name:'Conventional Deadlift',sets:3,reps:8,weight:18.1,bench:'Floor',rest:150,notes:'Hip hinge - braced core'},
-    {name:'Romanian Deadlift',sets:3,reps:10,weight:18.1,bench:'Floor',rest:120,notes:'Hamstring stretch - soft knee'},
-    {name:'Barbell OHP',sets:3,reps:10,weight:18.1,bench:'Standing',rest:150,notes:'Vertical press'},
-    {name:'Rear Delt Fly (DB)',sets:3,reps:15,weight:5,bench:'Hinged',rest:75,notes:'Per hand - light, controlled, full ROM'},
-    {name:'Standing Calf Raise',sets:3,reps:15,weight:null,bench:'Standing',rest:60,notes:'Full stretch at bottom'}
+    {name:'Barbell Back Squat',sets:4,reps:10,weight:27.2,bench:'Squat',rest:150,notes:'Big jump - 18.1kg was too light. RPE should hit 7-8.'},
+    {name:'Goblet Squat',sets:3,reps:15,weight:7.5,bench:'Standing',rest:90,notes:'Per hand or held at chest - full depth'},
+    {name:'Conventional Deadlift',sets:3,reps:8,weight:31.1,bench:'Floor',rest:150,notes:'Big jump - DLs handle this. Hip hinge, braced core.'},
+    {name:'Romanian Deadlift',sets:3,reps:10,weight:22.7,bench:'Floor',rest:120,notes:'Up from 18.1kg. Hamstring stretch, soft knee.'},
+    {name:'Barbell OHP',sets:3,reps:10,weight:22.7,bench:'Standing',rest:150,notes:'Up from 18.1kg. Strict press.'},
+    {name:'Bent Over Lateral Raise',sets:2,reps:15,weight:5,bench:'Hinged',rest:75,notes:'Per arm - 2 sets each = 4 total. Replaces rear delt fly (space constraint).'},
+    {name:'Standing Calf Raise',sets:3,reps:15,weight:null,bench:'Standing',rest:60,notes:'Bodyweight for now. Move to Goblet Calf Raise when easy.'}
   ]}
 };
 
 var DW={
-  'Barbell Bench Press':{start:18.1,current:18.1},'Incline Barbell Press':{start:18.1,current:18.1},
-  'Barbell Bent Over Row':{start:18.1,current:22.7},'Barbell Bent Over Row (top set)':{start:22.7,current:22.7},
-  'Barbell Curl':{start:18.1,current:18.1},'Barbell Back Squat':{start:18.1,current:18.1},
-  'Conventional Deadlift':{start:18.1,current:18.1},'Romanian Deadlift':{start:18.1,current:18.1},
-  'Barbell OHP':{start:18.1,current:18.1},'Seated DB OHP':{start:7.5,current:10},
-  'Incline DB Curl':{start:7.5,current:10},'Hammer Curl':{start:7.5,current:10},
+  'Barbell Bench Press':{start:18.1,current:22.7},'Incline Barbell Press':{start:18.1,current:22.7},
+  'Barbell Bent Over Row':{start:18.1,current:22.7},'Barbell Bent Over Row (top set)':{start:22.7,current:27.2},
+  'Barbell Curl':{start:18.1,current:18.1},'Barbell Back Squat':{start:18.1,current:27.2},
+  'Conventional Deadlift':{start:18.1,current:31.1},'Romanian Deadlift':{start:18.1,current:22.7},
+  'Barbell OHP':{start:18.1,current:22.7},'Seated DB OHP':{start:7.5,current:10},
+  'Incline DB Curl':{start:7.5,current:7.5},'Hammer Curl':{start:7.5,current:7.5},
   'Chest Supported DB Row':{start:5,current:10},'Incline DB Fly':{start:5,current:7.5},
-  'Lateral Raise (DB)':{start:5,current:5},'Rear Delt Fly (DB)':{start:5,current:5},
+  'Lateral Raise (DB)':{start:5,current:7.5},'Bent Over Lateral Raise':{start:5,current:5},
   'Preacher Curl':{start:7.5,current:7.5},'1-Arm Overhead Extension':{start:7.5,current:7.5},
   'Goblet Squat':{start:7.5,current:7.5}
 };
@@ -823,6 +823,22 @@ function buildSessHTML(sess,block){
     +'<div style="height:20px"></div>';
 }
 
+// Detects bilateral DB exercises where weight is per hand
+function isPerHand(name){
+  if(!name)return false;
+  // Single-arm exercises - per arm but not multiplied
+  var singleArm=['1-Arm Overhead Extension','DB Row (single arm)','Meadows Row','Concentration Curl','Preacher Curl','Tricep Kickback'];
+  if(singleArm.indexOf(name)>=0)return false;
+  // Goblet exercises - held at chest, single weight
+  if(name.indexOf('Goblet')>=0)return false;
+  // Bilateral DB exercises
+  if(name.indexOf('DB')>=0||name.indexOf('Dumbbell')>=0)return true;
+  if(name.indexOf('Lateral Raise')>=0||name.indexOf('Front Raise')>=0||name.indexOf('Rear Delt')>=0||name.indexOf('Bent Over Lateral')>=0)return true;
+  if(name.indexOf('Hammer Curl')>=0||name.indexOf('Cross-body')>=0||name.indexOf('Zottman')>=0)return true;
+  if(name==='Walking Lunge (DB)'||name==='Reverse Lunge (DB)'||name==='Step Up')return true;
+  return false;
+}
+
 function buildExHTML(ex,i){
   var w=state.session.weights[i];
   var rpeHTML='';
@@ -839,11 +855,20 @@ function buildExHTML(ex,i){
   }
   var tagHTML=ex.bench?'<span class="etag">'+ex.bench+'</span>':'';
   var notesHTML=ex.notes?'<div style="font-size:11px;color:var(--mu);font-style:italic;margin-bottom:8px" id="exn-'+i+'">'+ex.notes+'</div>':'<div style="display:none" id="exn-'+i+'"></div>';
-  var wOnchange=w!==null?'onchange="state.session.weights['+i+']=+this.value"':'';
+  var perHand=isPerHand(ex.name);
+  var wOnchange=w!==null?'onchange="updWt('+i+',+this.value)"':'';
   var wType=w!==null?'number':'text';
   var wVal=w!==null?w:'--';
   var wReadonly=w===null?'readonly':'min="0" max="300" step="0.5"';
-  var wUnit=w!==null?'<div class="efu">kg</div>':'';
+  var wUnit='';
+  if(w!==null){
+    if(perHand){
+      var total=(w*2).toFixed(w%1?1:0).replace(/\.0$/,'');
+      wUnit='<div class="efu">kg/hand</div><div class="efu" id="wtot-'+i+'" style="color:var(--ac);font-weight:600">= '+total+'kg total</div>';
+    } else {
+      wUnit='<div class="efu">kg</div>';
+    }
+  }
   var category=getExerciseCategory(ex.name);
   var swapBtn=category?'<button class="swap-btn" onclick="toggleSwap('+i+')">Swap</button>':'';
   return '<div class="er" id="er-'+i+'">'
@@ -859,6 +884,18 @@ function buildExHTML(ex,i){
     +'<div><div style="font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Notes</div>'
     +'<input class="ni2" placeholder="How did it feel?" oninput="state.session.notes['+i+']=this.value"/></div>'
     +'</div>';
+}
+
+function updWt(i,val){
+  state.session.weights[i]=val;
+  var exName=(state.session.swapped&&state.session.swapped[i])?state.session.swapped[i]:document.getElementById('exname-'+i).textContent;
+  if(isPerHand(exName)){
+    var totEl=document.getElementById('wtot-'+i);
+    if(totEl){
+      var total=(val*2).toFixed(val%1?1:0).replace(/\.0$/,'');
+      totEl.textContent='= '+total+'kg total';
+    }
+  }
 }
 
 function toggleSwap(i){
@@ -907,22 +944,21 @@ function swapExercise(i,newName){
   state.session.weights[i]=workingWeight;
   state.session.sets[i]=newEx.defaultSets;
   state.session.reps[i]=newEx.defaultReps;
-  // Update UI
-  document.getElementById('exname-'+i).textContent=newName;
-  document.getElementById('sets-'+i).value=newEx.defaultSets;
-  document.getElementById('reps-'+i).value=newEx.defaultReps;
-  var wEl=document.getElementById('wt-'+i);
-  if(wEl)wEl.value=workingWeight!==null?workingWeight:'--';
-  var notesEl=document.getElementById('exn-'+i);
-  if(notesEl){
-    if(newEx.notes){notesEl.textContent=newEx.notes;notesEl.style.display='block';}
-    else{notesEl.style.display='none';}
-  }
   // Track swapped exercise so it gets logged correctly
   if(!state.session.swapped)state.session.swapped={};
   state.session.swapped[i]=newName;
-  // Close menu
-  document.getElementById('swap-'+i).classList.remove('open');
+  // Rebuild the exercise card to update weight units (per hand vs total)
+  var fakeEx={name:newName,sets:newEx.defaultSets,reps:newEx.defaultReps,weight:workingWeight,bench:newEx.bench,rest:newEx.rest,notes:newEx.notes};
+  var newHTML=buildExHTML(fakeEx,i);
+  var oldEl=document.getElementById('er-'+i);
+  if(oldEl){
+    var temp=document.createElement('div');
+    temp.innerHTML=newHTML;
+    oldEl.parentNode.replaceChild(temp.firstChild,oldEl);
+  }
+  // Restore RPE selection if there was one
+  if(state.session.rpe[i])selR(i,state.session.rpe[i]);
+  if(state.session.done[i])togD(i);
   showToast('Swapped to '+newName,'success');
 }
 
@@ -1017,8 +1053,13 @@ function renderProgress(){
     var n=keys[k];var d=state.weights[n];
     var dn=n.replace('Barbell ','').replace(' (DB)','');
     var up=d.current>d.start;
+    var ph=isPerHand(n);
+    var unitLbl=ph?'kg/hand':'kg';
+    var totLbl='';
+    if(ph){var tot=(d.current*2).toFixed(d.current%1?1:0).replace(/\.0$/,'');totLbl='<div style="font-size:10px;color:var(--ac);margin-top:2px;font-weight:600">'+tot+'kg total</div>';}
     html+='<div class="lc"><div class="ln">'+dn+'</div>'
-      +'<div class="lw">'+d.current+'<span class="lu">kg</span></div>'
+      +'<div class="lw">'+d.current+'<span class="lu">'+unitLbl+'</span></div>'
+      +totLbl
       +'<div class="lch '+(up?'up':'same')+'">'+(up?'Up +'+(d.current-d.start).toFixed(1)+'kg':'No change yet')+'</div>'
       +'<input class="lei" id="le-'+n.replace(/\s/g,'_')+'" type="number" value="'+d.current+'" step="0.1" onblur="saveLW(\''+n+'\',this.value)"/>'
       +'<button class="leb" onclick="togLE(\''+n+'\')">Edit</button></div>';
@@ -1043,7 +1084,16 @@ function renderHistory(){
     for(var k=0;k<log.exercises.length;k++){
       var ex=log.exercises[k];
       var rpeCls=(!ex.rpe||ex.rpe==='--')?'':+ex.rpe<=6?'low':+ex.rpe<=8?'mid':'high';
-      exHTML+='<tr><td style="color:var(--tx)">'+ex.name+'</td><td style="color:var(--mu)">'+ex.sets+'x'+ex.reps+'</td><td style="color:var(--ac)">'+(ex.weight?ex.weight+'kg':'--')+'</td><td><span class="rc2 '+rpeCls+'">'+ex.rpe+'</span></td></tr>';
+      var wDisplay='--';
+      if(ex.weight){
+        if(isPerHand(ex.name)){
+          var tot=(ex.weight*2).toFixed(ex.weight%1?1:0).replace(/\.0$/,'');
+          wDisplay=ex.weight+'kg<span style="font-size:9px;color:var(--mu);display:block">('+tot+'kg total)</span>';
+        } else {
+          wDisplay=ex.weight+'kg';
+        }
+      }
+      exHTML+='<tr><td style="color:var(--tx)">'+ex.name+'</td><td style="color:var(--mu)">'+ex.sets+'x'+ex.reps+'</td><td style="color:var(--ac)">'+wDisplay+'</td><td><span class="rc2 '+rpeCls+'">'+ex.rpe+'</span></td></tr>';
       if(ex.notes)exHTML+='<tr><td colspan="4" style="color:var(--mu);font-size:11px;font-style:italic;padding-bottom:6px">'+ex.notes+'</td></tr>';
     }
     var checkHTML='';
@@ -1072,7 +1122,16 @@ function renderProg(){
       for(var e=0;e<s.exercises.length;e++){
         var ex=s.exercises[e];
         var benchStr=ex.bench?' - '+ex.bench:'';
-        h+='<div class="pex">'+ex.name+' - '+ex.sets+'x'+ex.reps+(ex.weight?' @ '+ex.weight+'kg':'')+benchStr+'</div>';
+        var wtStr='';
+        if(ex.weight){
+          if(isPerHand(ex.name)){
+            var tot=(ex.weight*2).toFixed(ex.weight%1?1:0).replace(/\.0$/,'');
+            wtStr=' @ '+ex.weight+'kg/hand ('+tot+'kg total)';
+          } else {
+            wtStr=' @ '+ex.weight+'kg';
+          }
+        }
+        h+='<div class="pex">'+ex.name+' - '+ex.sets+'x'+ex.reps+wtStr+benchStr+'</div>';
         if(ex.notes)h+='<div style="font-size:11px;color:var(--tx);opacity:0.6;padding:1px 0 4px;font-style:italic">'+ex.notes+'</div>';
       }
       h+='</div>';
@@ -1307,7 +1366,17 @@ function exportLog(){
     }
     t+=log.date+' - Day '+log.day+' '+log.sessionName+'\nWeek '+log.week+' | Block '+log.block+'\n\n';
     t+='Exercise                  | Sets x Reps | Weight | RPE | Notes\n'+'-'.repeat(68)+'\n';
-    for(var k=0;k<log.exercises.length;k++){var ex=log.exercises[k];t+=ex.name.padEnd(26)+'| '+String(ex.sets+'x'+ex.reps).padEnd(10)+'| '+String(ex.weight||'--').padEnd(7)+'| '+String(ex.rpe).padEnd(4)+'| '+ex.notes+'\n';}
+    for(var k=0;k<log.exercises.length;k++){
+      var ex=log.exercises[k];
+      var wStr='--';
+      if(ex.weight){
+        if(isPerHand(ex.name)){
+          var tot=(ex.weight*2).toFixed(ex.weight%1?1:0).replace(/\.0$/,'');
+          wStr=ex.weight+'/h ('+tot+'tot)';
+        } else {wStr=ex.weight+'kg';}
+      }
+      t+=ex.name.padEnd(26)+'| '+String(ex.sets+'x'+ex.reps).padEnd(10)+'| '+wStr.padEnd(15)+'| '+String(ex.rpe).padEnd(4)+'| '+ex.notes+'\n';
+    }
     if(log.sessionNotes)t+='\nSession notes: '+log.sessionNotes+'\n';
     t+='\n'+'-'.repeat(68)+'\n\n';
   }
