@@ -161,6 +161,15 @@ body{background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;font-
 .ni-field input::placeholder{color:var(--mu2)}
 .cl-btn{flex:1;padding:8px 4px;background:var(--s2);border:1px solid var(--bd);border-radius:8px;color:var(--mu);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;transition:all .15s;text-align:center}
 .cl-btn.sel{background:#1a1e00;border-color:var(--ac);color:var(--ac)}
+.swap-btn{background:var(--s3);border:1px solid var(--bd);border-radius:6px;color:var(--mu);font-size:10px;padding:3px 8px;cursor:pointer;font-family:'DM Sans',sans-serif;margin-left:6px;text-transform:uppercase;letter-spacing:.3px}
+.swap-btn:hover{border-color:var(--ac);color:var(--ac)}
+.swap-menu{background:var(--s3);border:1px solid var(--bd);border-radius:10px;padding:10px;margin-top:8px;margin-bottom:10px;display:none}
+.swap-menu.open{display:block}
+.swap-title{font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.swap-opt{display:block;width:100%;text-align:left;padding:8px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:6px;color:var(--tx);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;margin-bottom:4px;transition:all .15s}
+.swap-opt:hover{border-color:var(--ac)}
+.swap-opt.current{border-color:var(--ac);background:#1a1e00}
+.swap-opt .son{font-size:10px;color:var(--mu);margin-top:2px}
 .al-card{background:var(--s2);border:1px solid #ffd147;border-radius:10px;padding:12px;margin-bottom:8px}
 .al-title{font-family:'Bebas Neue',sans-serif;font-size:16px;color:#ffd147;letter-spacing:.5px;margin-bottom:4px}
 .al-body{font-size:12px;color:var(--mu);line-height:1.5}
@@ -481,6 +490,104 @@ var DW={
   'Goblet Squat':{start:7.5,current:7.5}
 };
 
+// EXERCISE LIBRARY BY MUSCLE GROUP - only includes exercises suitable for your setup (no cables, no machines, no pulldowns, no hip thrusts, no leg curls, no Bulgarian split squats, no cable work)
+var EXERCISE_LIB={
+  chest:[
+    {name:'Barbell Bench Press',defaultSets:4,defaultReps:10,defaultWeight:22.7,bench:'Flat',rest:150,notes:'Main compound'},
+    {name:'Incline Barbell Press',defaultSets:3,defaultReps:10,defaultWeight:22.7,bench:'Notch 2',rest:150,notes:'Upper chest'},
+    {name:'Decline Barbell Press',defaultSets:3,defaultReps:10,defaultWeight:22.7,bench:'Decline',rest:150,notes:'Lower chest'},
+    {name:'DB Bench Press',defaultSets:3,defaultReps:10,defaultWeight:15,bench:'Flat',rest:120,notes:'Per hand'},
+    {name:'Incline DB Press',defaultSets:3,defaultReps:10,defaultWeight:12.5,bench:'Notch 2',rest:120,notes:'Per hand'},
+    {name:'Incline DB Fly',defaultSets:3,defaultReps:12,defaultWeight:7.5,bench:'Notch 2',rest:75,notes:'Per hand - slow stretch'},
+    {name:'Flat DB Fly',defaultSets:3,defaultReps:12,defaultWeight:7.5,bench:'Flat',rest:75,notes:'Per hand - slow stretch'},
+    {name:'Push-up',defaultSets:3,defaultReps:12,defaultWeight:null,bench:'Floor',rest:75,notes:'Bodyweight - controlled tempo'},
+    {name:'Floor Press (BB)',defaultSets:3,defaultReps:10,defaultWeight:22.7,bench:'Floor',rest:150,notes:'Lockout focus'}
+  ],
+  back:[
+    {name:'Barbell Bent Over Row',defaultSets:4,defaultReps:10,defaultWeight:22.7,bench:'Standing',rest:150,notes:'Main compound'},
+    {name:'Barbell Bent Over Row (top set)',defaultSets:1,defaultReps:6,defaultWeight:27.2,bench:'Standing',rest:150,notes:'Heavy top set'},
+    {name:'Chest Supported DB Row',defaultSets:3,defaultReps:12,defaultWeight:10,bench:'Notch 2',rest:90,notes:'Per hand - strict'},
+    {name:'DB Row (single arm)',defaultSets:3,defaultReps:12,defaultWeight:12.5,bench:'Notch 1',rest:75,notes:'Per arm'},
+    {name:'Meadows Row',defaultSets:3,defaultReps:12,defaultWeight:15,bench:'Standing',rest:90,notes:'Per arm - landmine or DB'},
+    {name:'Barbell Shrug',defaultSets:3,defaultReps:12,defaultWeight:27.2,bench:'Standing',rest:75,notes:'Full squeeze at top'},
+    {name:'DB Shrug',defaultSets:3,defaultReps:12,defaultWeight:15,bench:'Standing',rest:75,notes:'Per hand'},
+    {name:'Superman',defaultSets:3,defaultReps:12,defaultWeight:null,bench:'Floor',rest:60,notes:'Lower back / erectors'}
+  ],
+  shoulders:[
+    {name:'Seated DB OHP',defaultSets:3,defaultReps:12,defaultWeight:10,bench:'Notch 3',rest:150,notes:'Per hand'},
+    {name:'Barbell OHP',defaultSets:3,defaultReps:10,defaultWeight:18.1,bench:'Standing',rest:150,notes:'Strict press'},
+    {name:'Standing DB OHP',defaultSets:3,defaultReps:12,defaultWeight:10,bench:'Standing',rest:120,notes:'Per hand'},
+    {name:'Arnold Press',defaultSets:3,defaultReps:12,defaultWeight:7.5,bench:'Notch 3',rest:90,notes:'Per hand - rotation through rep'},
+    {name:'Lateral Raise (DB)',defaultSets:3,defaultReps:15,defaultWeight:5,bench:'Standing',rest:90,notes:'Per hand - 2s up, 3s down'},
+    {name:'Front Raise (DB)',defaultSets:3,defaultReps:12,defaultWeight:5,bench:'Standing',rest:75,notes:'Per hand - controlled'},
+    {name:'Rear Delt Fly (DB)',defaultSets:3,defaultReps:15,defaultWeight:5,bench:'Hinged',rest:75,notes:'Per hand - light'},
+    {name:'Bent Over Lateral Raise',defaultSets:3,defaultReps:15,defaultWeight:5,bench:'Hinged',rest:75,notes:'Per hand - rear delts'},
+    {name:'Upright Row (BB)',defaultSets:3,defaultReps:12,defaultWeight:18.1,bench:'Standing',rest:90,notes:'Elbows high'}
+  ],
+  biceps:[
+    {name:'Barbell Curl',defaultSets:3,defaultReps:10,defaultWeight:18.1,bench:'Standing',rest:75,notes:'Full ROM'},
+    {name:'EZ Bar Curl',defaultSets:3,defaultReps:10,defaultWeight:15.9,bench:'Standing',rest:75,notes:'Easier on wrists'},
+    {name:'Incline DB Curl',defaultSets:3,defaultReps:12,defaultWeight:7.5,bench:'Notch 3',rest:75,notes:'Per hand - long head stretch'},
+    {name:'Hammer Curl',defaultSets:3,defaultReps:12,defaultWeight:10,bench:'Standing',rest:75,notes:'Per hand - neutral grip'},
+    {name:'Preacher Curl',defaultSets:2,defaultReps:15,defaultWeight:7.5,bench:'Bench setup',rest:60,notes:'Per arm - bench too narrow for both. 2 sets each arm.'},
+    {name:'Concentration Curl',defaultSets:3,defaultReps:12,defaultWeight:7.5,bench:'Seated',rest:60,notes:'Per arm - peak contraction'},
+    {name:'Zottman Curl',defaultSets:3,defaultReps:10,defaultWeight:7.5,bench:'Standing',rest:75,notes:'Per hand - rotate at top'},
+    {name:'Cross-body Hammer',defaultSets:3,defaultReps:12,defaultWeight:10,bench:'Standing',rest:75,notes:'Per hand - alternating'}
+  ],
+  triceps:[
+    {name:'1-Arm Overhead Extension',defaultSets:2,defaultReps:12,defaultWeight:7.5,bench:'Standing',rest:75,notes:'Per arm - full stretch at bottom'},
+    {name:'EZ Bar Skull Crusher',defaultSets:3,defaultReps:10,defaultWeight:11.36,bench:'Flat',rest:90,notes:'Behind head for full stretch'},
+    {name:'Barbell Skull Crusher',defaultSets:3,defaultReps:10,defaultWeight:18.1,bench:'Flat',rest:90,notes:''},
+    {name:'Close Grip Bench Press',defaultSets:3,defaultReps:10,defaultWeight:22.7,bench:'Flat',rest:120,notes:'Hands shoulder width'},
+    {name:'Tricep Kickback',defaultSets:3,defaultReps:12,defaultWeight:7.5,bench:'Hinged',rest:60,notes:'Per arm'},
+    {name:'Diamond Push-up',defaultSets:3,defaultReps:10,defaultWeight:null,bench:'Floor',rest:60,notes:'Bodyweight'},
+    {name:'Dips (bench)',defaultSets:3,defaultReps:12,defaultWeight:null,bench:'Bench',rest:75,notes:'Bodyweight'}
+  ],
+  legs:[
+    {name:'Barbell Back Squat',defaultSets:4,defaultReps:10,defaultWeight:22.7,bench:'Squat',rest:150,notes:'Primary compound'},
+    {name:'Front Squat (BB)',defaultSets:3,defaultReps:8,defaultWeight:18.1,bench:'Squat',rest:150,notes:'Quad dominant'},
+    {name:'Goblet Squat',defaultSets:3,defaultReps:15,defaultWeight:7.5,bench:'Standing',rest:90,notes:'Per hand or held at chest'},
+    {name:'Conventional Deadlift',defaultSets:3,defaultReps:8,defaultWeight:22.7,bench:'Floor',rest:150,notes:'Hip hinge'},
+    {name:'Romanian Deadlift',defaultSets:3,defaultReps:10,defaultWeight:22.7,bench:'Floor',rest:120,notes:'Hamstring stretch'},
+    {name:'Sumo Deadlift',defaultSets:3,defaultReps:8,defaultWeight:22.7,bench:'Floor',rest:150,notes:'Wide stance'},
+    {name:'DB RDL',defaultSets:3,defaultReps:10,defaultWeight:15,bench:'Standing',rest:90,notes:'Per hand'},
+    {name:'Walking Lunge (DB)',defaultSets:3,defaultReps:10,defaultWeight:10,bench:'Standing',rest:90,notes:'Per hand - per leg count'},
+    {name:'Reverse Lunge (DB)',defaultSets:3,defaultReps:10,defaultWeight:10,bench:'Standing',rest:90,notes:'Per hand - per leg count'},
+    {name:'Step Up',defaultSets:3,defaultReps:10,defaultWeight:10,bench:'Bench',rest:75,notes:'Per hand - per leg count'},
+    {name:'Standing Calf Raise',defaultSets:3,defaultReps:15,defaultWeight:null,bench:'Standing',rest:60,notes:'Full stretch at bottom'},
+    {name:'Goblet Calf Raise',defaultSets:3,defaultReps:15,defaultWeight:15,bench:'Standing',rest:60,notes:'Hold DB for extra load'}
+  ],
+  core:[
+    {name:'Plank',defaultSets:3,defaultReps:'30s',defaultWeight:null,bench:'Floor',rest:60,notes:'Core finisher'},
+    {name:'Side Plank',defaultSets:2,defaultReps:'30s',defaultWeight:null,bench:'Floor',rest:60,notes:'Per side'},
+    {name:'Dead Bug',defaultSets:3,defaultReps:12,defaultWeight:null,bench:'Floor',rest:45,notes:'Slow and controlled'},
+    {name:'Hollow Hold',defaultSets:3,defaultReps:'30s',defaultWeight:null,bench:'Floor',rest:60,notes:''},
+    {name:'Russian Twist (DB)',defaultSets:3,defaultReps:20,defaultWeight:5,bench:'Floor',rest:45,notes:'Total reps, both sides'},
+    {name:'DB Wood Chop',defaultSets:3,defaultReps:12,defaultWeight:7.5,bench:'Standing',rest:60,notes:'Per side'},
+    {name:'Hanging Knee Raise',defaultSets:3,defaultReps:12,defaultWeight:null,bench:'Standing',rest:75,notes:'If you have a bar'}
+  ],
+  cardio:[
+    {name:'All-out sprint effort',defaultSets:3,defaultReps:'20s',defaultWeight:null,bench:'',rest:120,notes:'Burpees, jumping jacks, or mountain climbers. Flat out - RPE 9-10.'},
+    {name:'Warm-up',defaultSets:1,defaultReps:'3 min',defaultWeight:null,bench:'',rest:0,notes:'Easy march, arm swings, light bodyweight squats.'},
+    {name:'Cool-down',defaultSets:1,defaultReps:'2 min',defaultWeight:null,bench:'',rest:0,notes:'Easy walking, slow breathing.'},
+    {name:'Walking pad - steady state',defaultSets:1,defaultReps:'30-45 min',defaultWeight:null,bench:'',rest:0,notes:'Low intensity conversational pace'},
+    {name:'Walking pad - intervals',defaultSets:1,defaultReps:'20 min',defaultWeight:null,bench:'',rest:0,notes:'1 min fast / 1 min easy'}
+  ]
+};
+
+// Map exercise name to muscle category for swapping
+function getExerciseCategory(name){
+  var cats=Object.keys(EXERCISE_LIB);
+  for(var c=0;c<cats.length;c++){
+    var ex=EXERCISE_LIB[cats[c]];
+    for(var e=0;e<ex.length;e++){
+      if(ex[e].name===name)return cats[c];
+    }
+  }
+  return null;
+}
+
+
 var state={
   week:1,day:1,logs:[],
   weights:JSON.parse(JSON.stringify(DW)),
@@ -731,24 +838,92 @@ function buildExHTML(ex,i){
       +'<button class="rqbtn" onclick="startR(180)">3m</button></div></div>';
   }
   var tagHTML=ex.bench?'<span class="etag">'+ex.bench+'</span>':'';
-  var notesHTML=ex.notes?'<div style="font-size:11px;color:var(--mu);font-style:italic;margin-bottom:8px">'+ex.notes+'</div>':'';
+  var notesHTML=ex.notes?'<div style="font-size:11px;color:var(--mu);font-style:italic;margin-bottom:8px" id="exn-'+i+'">'+ex.notes+'</div>':'<div style="display:none" id="exn-'+i+'"></div>';
   var wOnchange=w!==null?'onchange="state.session.weights['+i+']=+this.value"':'';
   var wType=w!==null?'number':'text';
   var wVal=w!==null?w:'--';
   var wReadonly=w===null?'readonly':'min="0" max="300" step="0.5"';
   var wUnit=w!==null?'<div class="efu">kg</div>':'';
+  var category=getExerciseCategory(ex.name);
+  var swapBtn=category?'<button class="swap-btn" onclick="toggleSwap('+i+')">Swap</button>':'';
   return '<div class="er" id="er-'+i+'">'
-    +'<div class="et"><div><div class="en">'+ex.name+'</div>'+tagHTML+'</div>'
+    +'<div class="et"><div><div class="en" id="exname-'+i+'">'+ex.name+'</div>'+tagHTML+swapBtn+'</div>'
     +'<button class="edb" id="ed-'+i+'" onclick="togD('+i+')">&#10003;</button></div>'
+    +'<div class="swap-menu" id="swap-'+i+'"></div>'
     +'<div class="ef">'
-    +'<div class="efl"><div class="efl-l">Sets</div><input class="efi" type="number" value="'+state.session.sets[i]+'" min="1" max="10" onchange="state.session.sets['+i+']=+this.value"/></div>'
-    +'<div class="efl"><div class="efl-l">Reps</div><input class="efi" type="text" value="'+state.session.reps[i]+'" onchange="state.session.reps['+i+']=this.value"/></div>'
-    +'<div class="efl"><div class="efl-l">Weight</div><input class="efi" type="'+wType+'" value="'+wVal+'" '+wReadonly+' '+wOnchange+'/>'+wUnit+'</div>'
+    +'<div class="efl"><div class="efl-l">Sets</div><input class="efi" id="sets-'+i+'" type="number" value="'+state.session.sets[i]+'" min="1" max="10" onchange="state.session.sets['+i+']=+this.value"/></div>'
+    +'<div class="efl"><div class="efl-l">Reps</div><input class="efi" id="reps-'+i+'" type="text" value="'+state.session.reps[i]+'" onchange="state.session.reps['+i+']=this.value"/></div>'
+    +'<div class="efl"><div class="efl-l">Weight</div><input class="efi" id="wt-'+i+'" type="'+wType+'" value="'+wVal+'" '+wReadonly+' '+wOnchange+'/>'+wUnit+'</div>'
     +'</div>'+notesHTML+restHTML
     +'<div class="rr"><div class="rrl">RPE</div><div class="rs">'+rpeHTML+'</div></div>'
     +'<div><div style="font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Notes</div>'
     +'<input class="ni2" placeholder="How did it feel?" oninput="state.session.notes['+i+']=this.value"/></div>'
     +'</div>';
+}
+
+function toggleSwap(i){
+  var menu=document.getElementById('swap-'+i);
+  if(!menu)return;
+  if(menu.classList.contains('open')){menu.classList.remove('open');return;}
+  var currentName=document.getElementById('exname-'+i).textContent;
+  var category=getExerciseCategory(currentName);
+  if(!category)return;
+  var options=EXERCISE_LIB[category];
+  var html='<div class="swap-title">Swap to another '+category+' exercise</div>';
+  for(var j=0;j<options.length;j++){
+    var opt=options[j];
+    var isCurrent=opt.name===currentName?' current':'';
+    var wText=opt.defaultWeight!==null?opt.defaultWeight+'kg':'bodyweight';
+    html+='<button class="swap-opt'+isCurrent+'" onclick="swapExercise('+i+',\''+opt.name.replace(/'/g,"\\'")+'\')">'
+      +opt.name
+      +'<div class="son">'+opt.defaultSets+'x'+opt.defaultReps+' @ '+wText+(opt.bench?' · '+opt.bench:'')+'</div>'
+      +'</button>';
+  }
+  menu.innerHTML=html;
+  menu.classList.add('open');
+}
+
+function swapExercise(i,newName){
+  var category=null;
+  var newEx=null;
+  var cats=Object.keys(EXERCISE_LIB);
+  for(var c=0;c<cats.length;c++){
+    for(var e=0;e<EXERCISE_LIB[cats[c]].length;e++){
+      if(EXERCISE_LIB[cats[c]][e].name===newName){
+        category=cats[c];
+        newEx=EXERCISE_LIB[cats[c]][e];
+        break;
+      }
+    }
+    if(newEx)break;
+  }
+  if(!newEx)return;
+  // Get user's working weight if they have one for this exercise
+  var workingWeight=newEx.defaultWeight;
+  if(state.weights[newName]&&state.weights[newName].current){
+    workingWeight=state.weights[newName].current;
+  }
+  // Update session state
+  state.session.weights[i]=workingWeight;
+  state.session.sets[i]=newEx.defaultSets;
+  state.session.reps[i]=newEx.defaultReps;
+  // Update UI
+  document.getElementById('exname-'+i).textContent=newName;
+  document.getElementById('sets-'+i).value=newEx.defaultSets;
+  document.getElementById('reps-'+i).value=newEx.defaultReps;
+  var wEl=document.getElementById('wt-'+i);
+  if(wEl)wEl.value=workingWeight!==null?workingWeight:'--';
+  var notesEl=document.getElementById('exn-'+i);
+  if(notesEl){
+    if(newEx.notes){notesEl.textContent=newEx.notes;notesEl.style.display='block';}
+    else{notesEl.style.display='none';}
+  }
+  // Track swapped exercise so it gets logged correctly
+  if(!state.session.swapped)state.session.swapped={};
+  state.session.swapped[i]=newName;
+  // Close menu
+  document.getElementById('swap-'+i).classList.remove('open');
+  showToast('Swapped to '+newName,'success');
 }
 
 function togD(i){
@@ -779,8 +954,9 @@ function logSess(){
   var btn=document.getElementById('logBtn');
   var exercises=[];
   for(var i=0;i<sess.exercises.length;i++){
+    var exName=(state.session.swapped&&state.session.swapped[i])?state.session.swapped[i]:sess.exercises[i].name;
     exercises.push({
-      name:sess.exercises[i].name,
+      name:exName,
       sets:state.session.sets[i],
       reps:state.session.reps[i],
       weight:state.session.weights[i],
@@ -792,8 +968,10 @@ function logSess(){
   if(state.lastChecklist&&state.lastChecklist.date===date)entry.checklist=state.lastChecklist;
   state.logs.unshift(entry);
   for(var i=0;i<sess.exercises.length;i++){
-    if(state.session.weights[i]!==null&&state.weights[sess.exercises[i].name]){
-      state.weights[sess.exercises[i].name].current=state.session.weights[i];
+    var exName=(state.session.swapped&&state.session.swapped[i])?state.session.swapped[i]:sess.exercises[i].name;
+    if(state.session.weights[i]!==null){
+      if(!state.weights[exName])state.weights[exName]={start:state.session.weights[i],current:state.session.weights[i]};
+      else state.weights[exName].current=state.session.weights[i];
     }
   }
   saveState();
